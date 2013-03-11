@@ -8,11 +8,8 @@
 
 var db = require("../storage/db.js");
 
-db.init("test");
-
 var addUser = function(username, callback){
     var name = username;
-
 
     var user = new db.schema.User();
 
@@ -23,17 +20,20 @@ var addUser = function(username, callback){
         track.axis = [axis, axis];
         u.tracks = [track, track2];
 
+        var dataPoints = [];
         for(var i=0;i<100;i++){
             var dataPoint = new db.schema.DataPoint({
-                value: i.toString()
+                value: i.toString(),
+                axis: axis
             });
-            axis.dataPoints.push(dataPoint);
+            dataPoints.push(dataPoint);
         }
 
         u.save(function(){
             db.schema.User.findOne({name: name}, function(err, u1){
-                console.log(u1.tracks[0].axis[0]);
-                callback(u1);
+                db.saveAll(dataPoints, function(){
+                    callback(u1);
+                });
             });
         })
     };
@@ -42,7 +42,6 @@ var addUser = function(username, callback){
 
     user.save(function(){
         db.schema.User.findOne({name: name}, (function(err, u){
-            console.log(u);
             addTrack(u);
         }));
     });
@@ -50,52 +49,40 @@ var addUser = function(username, callback){
 
 module.exports.group = {
     setUp: function(callback){
+        db.init("test", true);
         db.schema.User.remove({}, function(err) {
-            console.log('users removed');
-            callback();
+            db.schema.DataPoint.remove({}, function(err){
+                callback();
+            });
         });
     },
 
-    tearDown: function (callback) {
-        db.disconnect();
-        callback();
-    },
-//
-//    'sync db' : function(test){
-//        addUser("test1", function(user){
-//
-//            console.log("starting test");
-//            console.log(user);
-//
-//            db.schema.User.findOne({"tracks.name": "trackName"}, {"tracks.$": 1})
-//                .populate("track.axis.dataPoints")
-//                .exec(function(err, thing){
-//                    console.log(thing);
-//                    test.done();
-//                });
-//        });
-//    },
-
-    'find user': function(test){
+    basicUserWIthDataPoints: function(test){
         addUser("test2", function(user){
 
-            console.log("starting test2");
-            console.log(user);
+            var axis = user.tracks[0].axis[0];
 
-            db.schema.User.findOne({"tracks.name": "trackName"}, {"tracks.$": 1})
-                .populate("track.axis.dataPoints")
-                .exec(function(err, thing){
-                    var user = thing.toObject();
-                    user.tracks.forEach(function(j){
-                        j.axis.forEach(function(i){
-                            delete i.dataPoints;
-                        })
-                    });
-
-                    console.log(user);
-
+            db.schema.DataPoint.find(axis._id)
+                .exec(function(err, dataPoints){
+                    test.equal(dataPoints.length, 100, "Didn't pull back enough data points");
                     test.done();
                 });
         });
+    },
+
+    basicUser: function(test){
+        addUser("test1", function(user){
+            db.schema.User.findOne({"tracks.name": "trackName"}, {"tracks.$": 1})
+                .exec(function(err, user){
+                    test.equals(user.tracks[0].name, "trackName");
+                    test.done();
+                });
+        });
+    },
+
+    end: function(test){
+        db.disconnect();
+        test.done();
     }
+
 };

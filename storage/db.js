@@ -10,13 +10,20 @@ var mongoose = require("mongoose");
 
 var log = require("../utils/log.js");
 
-exports.init = function(name){
+exports.init = function(name, ignoreFailure){
     if(name == null){
         name = "trakkit";
     }
-    mongoose.connect('localhost', name);
+    try{
+        mongoose.connect('localhost', name);
 
-    log.debug("database connected");
+        log.debug("database connected");
+    }
+    catch(e){
+        if(!ignoreFailure){
+            throw e;
+        }
+    }
 }
 
 exports.disconnect = function () {
@@ -28,7 +35,6 @@ exports.schema = function(){
 
     var dataPoint = new Schema({
         value:String,
-        order:Schema.Types.Number,
         axis: {type:Schema.ObjectId, ref: "Axis"}
     });
 
@@ -54,3 +60,15 @@ exports.schema = function(){
         "DataPoint": mongoose.model("DataPoint", dataPoint)
     };
 }();
+
+exports.saveAll = function(docs, callback){
+        var count = 0;
+        docs.forEach(function(doc){
+            doc.save(function(err){
+                count++;
+                if( count == docs.length ){
+                    callback();
+                }
+            });
+        });
+}
