@@ -8,13 +8,13 @@
       , user = require('./routes/user')
       , http = require('http')
       , path = require('path')
-      , db = require('./storage/db.js')
+      //, db = require('./storage/db.js')
         , log = require("./utils/log.js");
 
 
     var app = express();
 
-    db.init();
+    //db.init();
 
     app.configure(function(){
       app.set('port', process.env.PORT || 3000);

@@ -11,16 +11,26 @@ interface IData{
 }
 
 interface ICallback{
-    callback:(error:any, item:IData) => void;
+    callback(error:string, item:any): void;
+}
+
+interface IEmptyCallback{
+    callback() : void;
+}
+
+interface IErrorCallback{
+    callback(item:string) : void;
 }
 
 interface IChainable{
-    //exec:
+    exec(item:ICallback) : IChainable;
 }
 
-interface IMongoose{
-    findOne: (item:any, callback:ICallback) => void;
-    find: (id:string, callback:ICallback) => IChainable;
+interface IMongoose {
+    findOne(item:any, callback:ICallback) : void;
+    find(id:string, callback?:ICallback) : IChainable;
+    save(item: IEmptyCallback) : void;
+    remove(item:any, callback:IErrorCallback) : void;
 }
 
  interface IAxis extends IMongoose, IData{

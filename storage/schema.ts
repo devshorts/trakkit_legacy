@@ -1,7 +1,5 @@
 ///<reference path='../def/all.ts'/>
 
-
-
 export class Schema{
     public User:IUser;
     public Track:ITrack;
