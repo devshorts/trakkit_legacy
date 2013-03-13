@@ -6,31 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
+///<reference path="./mongoose.d.ts"/>
+
 interface IData{
 
-}
-
-interface ICallback{
-    callback(error:string, item:any): void;
-}
-
-interface IEmptyCallback{
-    callback() : void;
-}
-
-interface IErrorCallback{
-    callback(item:string) : void;
-}
-
-interface IChainable{
-    exec(item:ICallback) : IChainable;
-}
-
-interface IMongoose {
-    findOne(item:any, callback:ICallback) : void;
-    find(id:string, callback?:ICallback) : IChainable;
-    save(item: IEmptyCallback) : void;
-    remove(item:any, callback:IErrorCallback) : void;
 }
 
  interface IAxis extends IMongoose, IData{

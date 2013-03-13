@@ -11,7 +11,6 @@
         "mongoose": "3.5.7",
         "passport": "0.1.16",
         "log4js": "0.5.7",
-        "nodeunit": "0.7.4",
-        "typescript-require":  "0.2.2"
+        "nodeunit": "0.7.4"
     }
 }

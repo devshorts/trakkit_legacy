@@ -1,6 +1,6 @@
 var db = require("../storage/db")
 var storage = db.storage;
-var data = db.storage.schema;
+var data = db.storage.data;
 var TestHelpers = (function () {
     function TestHelpers() { }
     TestHelpers.prototype.addTrackForUser = function (user, callback) {

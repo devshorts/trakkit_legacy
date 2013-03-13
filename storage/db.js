@@ -3,7 +3,7 @@ var storage = (function () {
     function storage() { }
     storage.log = require("../utils/log.js");
     storage.mongoose = require("mongoose");
-    storage.schema = new Schema.Schema();
+    storage.data = new Schema.Schema();
     storage.init = function init(dbName, ignoreFailures) {
         if(dbName == null) {
             dbName = "trakkit";
@@ -32,7 +32,7 @@ var storage = (function () {
         });
     };
     storage.findUser = function findUser(name, callback) {
-        storage.schema.User.findOne({
+        storage.data.User.findOne({
             name: name
         }, callback);
     };
