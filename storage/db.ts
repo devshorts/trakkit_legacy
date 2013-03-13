@@ -1,81 +1,48 @@
-    /**
-     * Created with JetBrains WebStorm.
-     * User: anton.kropp
-     * Date: 3/12/13
-     * Time: 4:10 PM
-     * To change this template use File | Settings | File Templates.
-     */
-    export class Schema{
-        get(){
-            var mongoose = require("mongoose");
-            var Schema = mongoose.Schema;
+///<reference path="schema.ts"/>
 
-            var dataPoint = new Schema({
-                value:String,
-                axis: {type:Schema.ObjectId, ref: "Axis"}
-            });
+import Schema = module("schema");
 
-            var axis = new Schema({
-                name:String
-            });
+export class storage{
+    static log: any = require("../utils/log.js");
+    static mongoose: any = require("mongoose");
 
+    static schema: Schema = new Schema.Schema();
 
-            var track = new Schema({
-                name: String,
-                axis: [axis]
-            });
+    static init(dbName:string, ignoreFailures:bool){
+        if(dbName == null){
+            dbName = "trakkit";
+        }
 
-            var user = new Schema({
-                name: String,
-                tracks: [track]
-            });
+        try{
+            mongoose.connect('localhost', dbName);
 
-            return {
-                "User": mongoose.model("User", user),
-                "Track": mongoose.model("Track", track),
-                "Axis": mongoose.model("Axis", axis),
-                "DataPoint": mongoose.model("DataPoint", dataPoint)
-            };
+            log.debug("database connected");
+        }
+        catch(e){
+            if(!ignoreFailures){
+                throw e;
+            }
         }
     }
 
-    export class storage{
-        static log: any = require("../utils/log.js");
-        static mongoose: any = require("mongoose");
+    static disconnect(){
+        mongoose.disconnect();
+    }
 
-        static schema: any = (new Schema()).get();
-
-        static init(dbName:string, ignoreFailures:bool){
-            if(dbName == null){
-                dbName = "trakkit";
-            }
-
-            try{
-                mongoose.connect('localhost', dbName);
-
-                log.debug("database connected");
-            }
-            catch(e){
-                if(!ignoreFailures){
-                    throw e;
+    static saveAll(docs:any, callback:() => any){
+        var count = 0;
+        docs.forEach(function(doc){
+            doc.save(function(err){
+                count++;
+                if( count == docs.length ){
+                    callback();
                 }
-            }
-        }
-
-        static disconnect(){
-            mongoose.disconnect();
-        }
-
-        static saveAll(docs:any, callback:() => any){
-            var count = 0;
-            docs.forEach(function(doc){
-                doc.save(function(err){
-                    count++;
-                    if( count == docs.length ){
-                        callback();
-                    }
-                });
             });
-        }
+        });
     }
+
+    static findUser(name:String, callback:(error:any, user:IUser) => void){
+        schema.User.findOne({name: name}, callback);
+    }
+}
 

@@ -5,6 +5,7 @@
  * Time: 2:36 PM
  * To change this template use File | Settings | File Templates.
  */
+"use strict";
 
 var db = require("../storage/db.js").storage;
 
@@ -25,7 +26,7 @@ var addTrackForUser = function(user, callback){
     }
 
     user.save(function(){
-        db.schema.User.findOne({name: user.name}, function(err, updatedUser){
+        db.findUser(user.name, function(err, updatedUser){
             db.saveAll(dataPoints, function(){
                 callback(updatedUser);
             });

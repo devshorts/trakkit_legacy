@@ -1,45 +1,9 @@
-var Schema = (function () {
-    function Schema() { }
-    Schema.prototype.get = function () {
-        var mongoose = require("mongoose");
-        var Schema = mongoose.Schema;
-        var dataPoint = new Schema({
-            value: String,
-            axis: {
-                type: Schema.ObjectId,
-                ref: "Axis"
-            }
-        });
-        var axis = new Schema({
-            name: String
-        });
-        var track = new Schema({
-            name: String,
-            axis: [
-                axis
-            ]
-        });
-        var user = new Schema({
-            name: String,
-            tracks: [
-                track
-            ]
-        });
-        return {
-            "User": mongoose.model("User", user),
-            "Track": mongoose.model("Track", track),
-            "Axis": mongoose.model("Axis", axis),
-            "DataPoint": mongoose.model("DataPoint", dataPoint)
-        };
-    };
-    return Schema;
-})();
-exports.Schema = Schema;
+var Schema = require("./schema")
 var storage = (function () {
     function storage() { }
     storage.log = require("../utils/log.js");
     storage.mongoose = require("mongoose");
-    storage.schema = (new Schema()).get();
+    storage.schema = new Schema.Schema();
     storage.init = function init(dbName, ignoreFailures) {
         if(dbName == null) {
             dbName = "trakkit";
@@ -66,6 +30,11 @@ var storage = (function () {
                 }
             });
         });
+    };
+    storage.findUser = function findUser(name, callback) {
+        storage.schema.User.findOne({
+            name: name
+        }, callback);
     };
     return storage;
 })();
