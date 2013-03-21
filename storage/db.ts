@@ -2,6 +2,7 @@
 
 import Schema = module("schema");
 
+import User = Schema.User;
 
 export class storage{
     static log: any = require("../utils/log.js");
@@ -33,7 +34,7 @@ export class storage{
 
     static saveAll(docs:any, callback:() => any){
         var count = 0;
-        docs.forEach(function(doc){
+        docs.forEach( (doc:MongooseBase) => {
             doc.save(function(err){
                 count++;
                 if( count == docs.length ){
@@ -43,7 +44,7 @@ export class storage{
         });
     }
 
-    static findUser(name:String, callback:(error:any, user:IUser) => void){
-        data.User.findOne({name: name}, callback);
+    static findUser(name:String, callback:(error:any, user:User) => void){
+        data.UserData.findOne({name: name}, callback);
     }
 }

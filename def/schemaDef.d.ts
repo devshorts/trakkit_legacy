@@ -8,31 +8,25 @@
 
 ///<reference path="./mongoose.d.ts"/>
 
-interface IData{
-
-}
-
- interface IAxis extends IMongoose, IData{
+interface IAxis extends IMongooseBase{
     _id: string;
     name: string;
 }
 
- interface IDataPoint extends IMongoose, IData{
+interface IDataPoint extends IMongooseBase{
     _id: string;
-    value: string;
-    axis: {
-        type: string;
-        ref: string;
-    };
+    xAxis: string;
+    yAxis: string;
+    user: IUser;
 }
 
- interface ITrack extends IMongoose, IData{
+interface ITrack extends IMongooseBase{
     _id: string;
     name: string;
     axis: IAxis[];
 }
 
- interface IUser extends IMongoose, IData{
+interface IUser extends IMongooseBase{
     _id: string;
     name: string;
     tracks: ITrack[];

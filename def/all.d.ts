@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+///<reference path="./lib.d.ts"/>
 ///<reference path="./mongoose.d.ts"/>
 ///<reference path="./nodeUnit.d.ts"/>
 ///<reference path="./schemaDef.d.ts"/>

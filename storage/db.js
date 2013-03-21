@@ -1,4 +1,5 @@
 var Schema = require("./schema")
+var User = Schema.User;
 var storage = (function () {
     function storage() { }
     storage.log = require("../utils/log.js");
@@ -32,7 +33,7 @@ var storage = (function () {
         });
     };
     storage.findUser = function findUser(name, callback) {
-        storage.data.User.findOne({
+        storage.data.UserData.findOne({
             name: name
         }, callback);
     };

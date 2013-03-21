@@ -1,51 +1,67 @@
 ///<reference path='../def/all.ts'/>
+///<reference path='../def/lib.d.ts'/>
+
+var mongoose:any = require("mongoose");
+
+// Need to provide the same structure in 'mongoose' style format to define.
+var userSchema = new mongoose.Schema(
+    {
+        name: String
+    });
+
+var dataPointSchema = new mongoose.Schema({
+    xAxis: String,
+    yAxis: String,
+    user: [userSchema]
+});
+
+export var User:IMongooseSearchable = <IMongooseSearchable><{ new() : IUser; }>mongoose.model('User', userSchema);
+export var DataPoint:IMongooseSearchable = <IMongooseSearchable><{ new() : IDataPoint; }>mongoose.model('DataPoint', dataPointSchema);
+
+export class db{
 
 
-export class Schema{
-    public User:IUser;
-    public Track:ITrack;
-    public Axis:IAxis;
-    public DataPoint:IDataPoint;
+    init(dbName:string, ignoreFailures:bool){
+        if(dbName == null){
+            dbName = "trakkit";
+        }
 
-    constructor(){
-        var mongoose:IMongooseBase = require("mongoose");
-        var mongooseSchema = <MongooseSchema>mongoose.Schema;
+        try{
+            mongoose.connect('localhost', dbName);
+        }
+        catch(e){
+            if(!ignoreFailures){
+                throw e;
+            }
+        }
+    }
 
-        var dataPoint = new mongooseSchema({
-            value:String,
-            axis: {type:mongooseSchema.ObjectId, ref: "Axis"}
+    disconnect(){
+        mongoose.disconnect();
+    }
+
+    newUser():IUser{
+        return <IUser>new User();
+    }
+
+    newDataPoint():IDataPoint{
+        return <IDataPoint>new DataPoint();
+    }
+
+    newObjectId(id:String):any{
+        return mongoose.Schema.ObjectId(id);
+    }
+
+    saveAll(docs:IMongooseBase[], callback:() => any){
+        var count = 0;
+        docs.forEach( (doc,_,_)=> {
+            doc.save(() => {
+                count++;
+                if( count == docs.length ){
+                    callback();
+                }
+            });
         });
-
-        var axis = new mongooseSchema({
-            name:String
-        });
-
-        var track = new mongooseSchema({
-            name: String,
-            axis: [axis]
-        });
-
-        var user = new mongooseSchema({
-            name: String,
-            tracks: [track]
-        });
-
-        this.User = <User>mongoose.model("User", user);
-        this.Track = <Track>mongoose.model("Track", track);
-        this.Axis = <Axis>mongoose.model("Axis", axis);
-        this.DataPoint = <DataPoint>mongoose.model("DataPoint", dataPoint);
     }
 }
 
-export declare class Axis implements IAxis{
-    constructor(item:any);
-}
-export declare class Track implements ITrack{
-    constructor(item:any);
-}
-export declare class User implements IUser{
-    constructor(item:any);
-}
-export declare class DataPoint implements IDataPoint{
-    constructor(item:any);
-}

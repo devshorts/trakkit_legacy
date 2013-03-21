@@ -15,31 +15,33 @@ interface IEmptyCallback{
 }
 
 interface IErrorCallback{
-    callback(item:string) : void;
+    callback(item?:string) : void;
+}
+
+interface IWhere{
+    equals(value:String):IChainable;
+    gt(value:String):IChainable;
+    lt(value:String):IChainable;
+    in(value:String[]):IChainable;
 }
 
 interface IChainable{
     exec(item:ICallback) : IChainable;
     populate(...args: any[]) : IChainable;
+    select(query:string):IChainable;
+    limit(num:Number):IChainable;
+    sort(field:String):IChainable;
+    where(selector:String):IWhere;
 }
 
-interface IMongoose {
+interface IMongooseSearchable{
     findOne(item:any, callback:ICallback) : void;
-    find(id:string, callback?:ICallback) : IChainable;
-    save(item: IEmptyCallback) : void;
+    find(id:string, fields?:any, options?:any, callback?:ICallback) : IChainable;
+    find(propBag:Object, callback?:ICallback) : IChainable;
     remove(item:any, callback:IErrorCallback) : void;
-    push(item:IMongoose):void;
 }
 
-interface IMongooseSchema{
-    ObjectId:String;
-}
-
-declare class MongooseSchema implements IMongooseSchema{
-    constructor(item:any);
-    public ObjectId:String;
-}
-interface IMongooseBase{
-    model(name:String, ref:any):any;
-    Schema():any;
+interface IMongooseBase {
+    save(item: IEmptyCallback) : void;
+    push(item:IMongooseBase):void;
 }
