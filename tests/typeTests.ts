@@ -16,7 +16,10 @@ var storage = new schema.db();
 export var group = {
     init: (t:ITest) =>{
         storage.init("test", true);
-        schema.User.remove({}, () => schema.DataPoint.remove({}, () => t.done()));
+        schema.User.remove({},
+            () => schema.DataPoint.remove({},
+            () => schema.Track.remove({},
+            () => t.done())));
     },
 
     test: (t:ITest) =>{
@@ -67,6 +70,46 @@ export var group = {
             });
 
         })
+    },
+
+    buildTrack: (t:ITest) =>{
+        var u = storage.newUser();
+        u.name = "buildTrackUser";
+        u.save(() =>{
+
+            var track = storage.newTrack();
+
+            for(var i = 0;i<100;i++){
+                var dp = storage.newDataPoint();
+                dp.xAxis = "x" + i;
+                dp.yAxis = "y" + i;
+                dp.user = u;
+                track.dataPoints.push(dp);
+            }
+
+            track.user = u._id;
+
+            track.save(()=>{
+                schema.Track.findOne(track._id)
+                    .populate("user")
+                    .exec((err, tr:ITrack) =>{
+
+                        t.equal(u.name, tr.user.name);
+                        t.equal(tr.dataPoints.length, 100);
+
+                        u.name = "buildTrackUser2";
+
+                        schema.User.update(u._id, storage.pruneObject(u), {}, (err, numChanged, rawResponse) =>{
+                            console.log(numChanged);
+
+                            schema.User.findOne(u._id, (err, user) =>{
+                                t.equal(user.name, u.name);
+                                t.done();
+                            });
+                        });
+                    });
+            });
+        });
     },
 
     end: (t:ITest) =>{

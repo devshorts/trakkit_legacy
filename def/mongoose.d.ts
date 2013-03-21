@@ -34,14 +34,22 @@ interface IChainable{
     where(selector:String):IWhere;
 }
 
+interface IUpdateOptions{
+    safe?:Boolean;
+    upsert?:Boolean;
+    multi?:Boolean;
+    strict?:Boolean;
+}
 interface IMongooseSearchable{
-    findOne(item:any, callback:ICallback) : void;
+    findOne(item:any, callback?:ICallback) : IChainable;
     find(id:string, fields?:any, options?:any, callback?:ICallback) : IChainable;
     find(propBag:Object, callback?:ICallback) : IChainable;
     remove(item:any, callback:IErrorCallback) : void;
+    update(query:Object, updatedFields:Object, options?:IUpdateOptions, callback?:(error:String, numResponses:Number, rawResponse:any) => void);
 }
 
 interface IMongooseBase {
     save(item: IEmptyCallback) : void;
     push(item:IMongooseBase):void;
+    toObject():Object;
 }

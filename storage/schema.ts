@@ -11,12 +11,18 @@ var userSchema = new mongoose.Schema(
 
 var dataPointSchema = new mongoose.Schema({
     xAxis: String,
-    yAxis: String,
-    user: [userSchema]
+    yAxis: String
 });
+
+var trackSchema = new mongoose.Schema({
+    dataPoints: [dataPointSchema],
+    name: String,
+    user: {type: mongoose.Schema.ObjectId, ref:"User"}
+})
 
 export var User:IMongooseSearchable = <IMongooseSearchable><{ new() : IUser; }>mongoose.model('User', userSchema);
 export var DataPoint:IMongooseSearchable = <IMongooseSearchable><{ new() : IDataPoint; }>mongoose.model('DataPoint', dataPointSchema);
+export var Track:IMongooseSearchable = <IMongooseSearchable><{ new() : ITrack; }>mongoose.model('Track', trackSchema);
 
 export class db{
 
@@ -48,8 +54,21 @@ export class db{
         return <IDataPoint>new DataPoint();
     }
 
+    newTrack():ITrack{
+        return <ITrack>new Track();
+    }
+
     newObjectId(id:String):any{
         return mongoose.Schema.ObjectId(id);
+    }
+
+    pruneObject(data:IMongooseBase):Object{
+        var obj = data.toObject();
+        if(obj.hasOwnProperty("_id")){
+            delete obj._id;
+        }
+
+        return obj;
     }
 
     saveAll(docs:IMongooseBase[], callback:() => any){

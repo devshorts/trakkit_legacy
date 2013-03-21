@@ -7,7 +7,10 @@ exports.group = {
         }, function () {
             return schema.DataPoint.remove({
             }, function () {
-                return t.done();
+                return schema.Track.remove({
+                }, function () {
+                    return t.done();
+                });
             });
         });
     },
@@ -45,6 +48,36 @@ exports.group = {
                 }, function (err, dataPoints) {
                     console.log(dataPoints);
                     t.done();
+                });
+            });
+        });
+    },
+    buildTrack: function (t) {
+        var u = storage.newUser();
+        u.name = "buildTrackUser";
+        u.save(function () {
+            var track = storage.newTrack();
+            for(var i = 0; i < 100; i++) {
+                var dp = storage.newDataPoint();
+                dp.xAxis = "x" + i;
+                dp.yAxis = "y" + i;
+                dp.user = u;
+                track.dataPoints.push(dp);
+            }
+            track.user = u._id;
+            track.save(function () {
+                schema.Track.findOne(track._id).populate("user").exec(function (err, tr) {
+                    t.equal(u.name, tr.user.name);
+                    t.equal(tr.dataPoints.length, 100);
+                    u.name = "buildTrackUser2";
+                    schema.User.update(u._id, storage.pruneObject(u), {
+                    }, function (err, numChanged, rawResponse) {
+                        console.log(numChanged);
+                        schema.User.findOne(u._id, function (err, user) {
+                            t.equal(user.name, u.name);
+                            t.done();
+                        });
+                    });
                 });
             });
         });

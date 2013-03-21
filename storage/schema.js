@@ -4,13 +4,21 @@ var userSchema = new mongoose.Schema({
 });
 var dataPointSchema = new mongoose.Schema({
     xAxis: String,
-    yAxis: String,
-    user: [
-        userSchema
-    ]
+    yAxis: String
+});
+var trackSchema = new mongoose.Schema({
+    dataPoints: [
+        dataPointSchema
+    ],
+    name: String,
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User"
+    }
 });
 exports.User = mongoose.model('User', userSchema);
 exports.DataPoint = mongoose.model('DataPoint', dataPointSchema);
+exports.Track = mongoose.model('Track', trackSchema);
 var db = (function () {
     function db() { }
     db.prototype.init = function (dbName, ignoreFailures) {
@@ -34,8 +42,18 @@ var db = (function () {
     db.prototype.newDataPoint = function () {
         return new exports.DataPoint();
     };
+    db.prototype.newTrack = function () {
+        return new exports.Track();
+    };
     db.prototype.newObjectId = function (id) {
         return mongoose.Schema.ObjectId(id);
+    };
+    db.prototype.pruneObject = function (data) {
+        var obj = data.toObject();
+        if(obj.hasOwnProperty("_id")) {
+            delete obj._id;
+        }
+        return obj;
     };
     db.prototype.saveAll = function (docs, callback) {
         var count = 0;
