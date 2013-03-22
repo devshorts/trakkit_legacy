@@ -1,13 +1,12 @@
-var schema = require("../storage/schema")
-var storage = new schema.db();
+var db = require("../storage/storageContainer")
 exports.group = {
     init: function (t) {
-        storage.init("test", true);
-        schema.User.remove({
+        db.storage.init("test", true);
+        db.schema.User.remove({
         }, function () {
-            return schema.DataPoint.remove({
+            return db.schema.DataPoint.remove({
             }, function () {
-                return schema.Track.remove({
+                return db.schema.Track.remove({
                 }, function () {
                     return t.done();
                 });
@@ -15,12 +14,12 @@ exports.group = {
         });
     },
     test: function (t) {
-        var u = storage.newUser();
+        var u = db.storage.newUser();
         u.name = "test";
         u.save(function () {
-            schema.User.findOne(u._id, function (err, user) {
+            db.schema.User.findOne(u._id, function (err, user) {
                 console.log(user.name);
-                schema.User.find(u._id).where("_id").equals(u._id).exec(function (err, u1) {
+                db.schema.User.find(u._id).where("_id").equals(u._id).exec(function (err, u1) {
                     console.log(u1);
                     t.equal(u1[0].name, u.name);
                     t.done();
@@ -29,21 +28,21 @@ exports.group = {
         });
     },
     manyPoints: function (t) {
-        var u = storage.newUser();
+        var u = db.storage.newUser();
         u.name = "manyPoints";
         u.save(function () {
             var dpList = new Array();
             for(var i = 0; i < 100; i++) {
-                var dp = storage.newDataPoint();
+                var dp = db.storage.newDataPoint();
                 dp.xAxis = "x" + i;
                 dp.yAxis = "y" + i;
                 dp.user = u;
                 dpList.push(dp);
             }
-            storage.saveAll(dpList, function () {
+            db.storage.saveAll(dpList, function () {
                 console.log(u._id);
-                var id = storage.newObjectId(u._id);
-                schema.DataPoint.find({
+                var id = db.storage.newObjectId(u._id);
+                db.schema.DataPoint.find({
                     "user._id": u._id
                 }, function (err, dataPoints) {
                     console.log(dataPoints);
@@ -53,28 +52,15 @@ exports.group = {
         });
     },
     buildTrack: function (t) {
-        var u = storage.newUser();
+        var u = db.storage.newUser();
         u.name = "buildTrackUser";
         u.save(function () {
-            var track = storage.newTrack();
-            for(var i = 0; i < 100; i++) {
-                var dp = storage.newDataPoint();
-                dp.xAxis = "x" + i;
-                dp.yAxis = "y" + i;
-                dp.user = u;
-                track.dataPoints.push(dp);
-            }
-            track.user = u._id;
-            track.save(function () {
-                schema.Track.findOne(track._id).populate("user").exec(function (err, tr) {
-                    t.equal(u.name, tr.user.name);
-                    t.equal(tr.dataPoints.length, 100);
-                    u.name = "buildTrackUser2";
-                    schema.User.update(u._id, storage.pruneObject(u), {
-                    }, function (err, numChanged, rawResponse) {
-                        console.log(numChanged);
-                        schema.User.findOne(u._id, function (err, user) {
-                            t.equal(user.name, u.name);
+            u.name = "crapper";
+            u.save(function () {
+                return createTrack(t, u, function () {
+                    return createTrack(t, u, function () {
+                        return db.userStorage.getTracksForUser(u, function (foundUser) {
+                            t.equal(foundUser.tracks.length, 2);
                             t.done();
                         });
                     });
@@ -83,8 +69,26 @@ exports.group = {
         });
     },
     end: function (t) {
-        storage.disconnect();
+        db.storage.disconnect();
         t.done();
     }
 };
+function createTrack(t, u, callback) {
+    var track = db.storage.newTrack();
+    for(var i = 0; i < 100; i++) {
+        var dp = db.storage.newDataPoint();
+        dp.xAxis = "x" + i;
+        dp.yAxis = "y" + i;
+        dp.user = u;
+        track.dataPoints.push(dp);
+    }
+    track.user = u._id;
+    track.save(function () {
+        db.schema.Track.findOne(track._id).populate("user").exec(function (err, tr) {
+            t.equal(u.name, tr.user.name);
+            t.equal(tr.dataPoints.length, 100);
+            callback();
+        });
+    });
+}
 //@ sourceMappingURL=typeTests.js.map

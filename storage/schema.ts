@@ -25,8 +25,6 @@ export var DataPoint:IMongooseSearchable = <IMongooseSearchable><{ new() : IData
 export var Track:IMongooseSearchable = <IMongooseSearchable><{ new() : ITrack; }>mongoose.model('Track', trackSchema);
 
 export class db{
-
-
     init(dbName:string, ignoreFailures:bool){
         if(dbName == null){
             dbName = "trakkit";
@@ -66,6 +64,10 @@ export class db{
         var obj = data.toObject();
         if(obj.hasOwnProperty("_id")){
             delete obj._id;
+        }
+
+        if(obj.hasOwnProperty("_v")){
+            delete obj._v;
         }
 
         return obj;

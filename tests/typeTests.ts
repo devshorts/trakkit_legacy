@@ -9,29 +9,27 @@
 ///<reference path="../def/all.d.ts"/>
 ///<reference path="../storage/schema.ts"/>
 
-import schema = module("../storage/schema");
-
-var storage = new schema.db();
+import db = module("../storage/storageContainer");
 
 export var group = {
     init: (t:ITest) =>{
-        storage.init("test", true);
-        schema.User.remove({},
-            () => schema.DataPoint.remove({},
-            () => schema.Track.remove({},
-            () => t.done())));
+        db.storage.init("test", true);
+        db.schema.User.remove({},
+            () => db.schema.DataPoint.remove({},
+                () => db.schema.Track.remove({},
+                    () => t.done())));
     },
 
     test: (t:ITest) =>{
-        var u = storage.newUser();
+        var u = db.storage.newUser();
 
         u.name = "test";
 
         u.save(()=> {
-            schema.User.findOne(u._id, (err, user) => {
+            db.schema.User.findOne(u._id, (err, user) => {
                 console.log(user.name);
 
-                schema.User.find(u._id)
+                db.schema.User.find(u._id)
                     .where("_id").equals(u._id)
                     .exec((err, u1) => {
                         console.log(u1);
@@ -44,26 +42,26 @@ export var group = {
     },
 
     manyPoints: (t:ITest) =>{
-        var u = storage.newUser();
+        var u = db.storage.newUser();
         u.name = "manyPoints";
         u.save(() =>{
 
             var dpList = new IDataPoint[];
 
             for(var i = 0;i<100;i++){
-                var dp = storage.newDataPoint();
+                var dp = db.storage.newDataPoint();
                 dp.xAxis = "x" + i;
                 dp.yAxis = "y" + i;
                 dp.user = u;
                 dpList.push(dp);
             }
 
-            storage.saveAll(dpList, ()=>{
+            db.storage.saveAll(dpList, ()=>{
                 console.log(u._id);
 
-                var id = storage.newObjectId(u._id);
+                var id = db.storage.newObjectId(u._id);
 
-                schema.DataPoint.find({"user._id" : u._id }, (err, dataPoints) => {
+                db.schema.DataPoint.find({"user._id" : u._id }, (err, dataPoints) => {
                     console.log(dataPoints);
                     t.done();
                 })
@@ -73,47 +71,51 @@ export var group = {
     },
 
     buildTrack: (t:ITest) =>{
-        var u = storage.newUser();
+        var u = db.storage.newUser();
         u.name = "buildTrackUser";
         u.save(() =>{
-
-            var track = storage.newTrack();
-
-            for(var i = 0;i<100;i++){
-                var dp = storage.newDataPoint();
-                dp.xAxis = "x" + i;
-                dp.yAxis = "y" + i;
-                dp.user = u;
-                track.dataPoints.push(dp);
-            }
-
-            track.user = u._id;
-
-            track.save(()=>{
-                schema.Track.findOne(track._id)
-                    .populate("user")
-                    .exec((err, tr:ITrack) =>{
-
-                        t.equal(u.name, tr.user.name);
-                        t.equal(tr.dataPoints.length, 100);
-
-                        u.name = "buildTrackUser2";
-
-                        schema.User.update(u._id, storage.pruneObject(u), {}, (err, numChanged, rawResponse) =>{
-                            console.log(numChanged);
-
-                            schema.User.findOne(u._id, (err, user) =>{
-                                t.equal(user.name, u.name);
-                                t.done();
-                            });
-                        });
-                    });
-            });
+            u.name = "crapper";
+            u.save(() =>
+            createTrack(t, u, () =>
+                createTrack(t, u, () =>
+                        db.userStorage.getTracksForUser(u, (foundUser) => {
+                        t.equal(foundUser.tracks.length, 2);
+                        t.done();
+                    })
+                )
+            ));
         });
+
     },
 
     end: (t:ITest) =>{
-        storage.disconnect();
+        db.storage.disconnect();
         t.done();
     }
+}
+
+function createTrack(t:ITest, u:IUser, callback:() => void){
+    var track = db.storage.newTrack();
+
+    for(var i = 0;i<100;i++){
+        var dp = db.storage.newDataPoint();
+        dp.xAxis = "x" + i;
+        dp.yAxis = "y" + i;
+        dp.user = u;
+        track.dataPoints.push(dp);
+    }
+
+    track.user = u._id;
+
+    track.save(()=>{
+        db.schema.Track.findOne(track._id)
+            .populate("user")
+            .exec((err, tr:ITrack) =>{
+
+                t.equal(u.name, tr.user.name);
+                t.equal(tr.dataPoints.length, 100);
+
+                callback();
+            });
+    });
 }

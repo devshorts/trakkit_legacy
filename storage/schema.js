@@ -53,6 +53,9 @@ var db = (function () {
         if(obj.hasOwnProperty("_id")) {
             delete obj._id;
         }
+        if(obj.hasOwnProperty("_v")) {
+            delete obj._v;
+        }
         return obj;
     };
     db.prototype.saveAll = function (docs, callback) {
