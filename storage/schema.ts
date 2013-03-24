@@ -73,6 +73,16 @@ export class db{
         return obj;
     }
 
+    extractMongoFields(item:any, name:String){
+        var ret = {};
+        for(var key in item){
+            if(key != "_v" && key != "_id"){
+                ret[name + ".$." + key] = item[key];
+            }
+        }
+        return ret;
+    }
+
     saveAll(docs:IMongooseBase[], callback:() => any){
         var count = 0;
         docs.forEach( (doc,_,_)=> {

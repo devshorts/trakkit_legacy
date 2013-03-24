@@ -9,9 +9,10 @@
 
 import schemaImport = module("./schema");
 import users = module("./userStorage");
+import tracks = module("./trackStorage")
 
 
 export var storage:schemaImport.db = new schemaImport.db();
 export var userStorage:users.userStorage = new users.userStorage();
 export var schema = schemaImport;
-
+export var trackStorage:tracks.trackStorage = new tracks.trackStorage();

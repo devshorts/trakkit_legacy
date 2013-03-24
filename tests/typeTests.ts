@@ -85,7 +85,33 @@ export var group = {
                 )
             ));
         });
+    },
 
+    updateTrackPoints: (t:ITest) =>{
+        var u = db.storage.newUser();
+        u.name = "updateTrackPoints";
+        u.save(() =>{
+            u.name = "crapper";
+            u.save(() =>
+                createTrack(t, u, () =>
+                        db.userStorage.getTracksForUser(u, (foundUser) => {
+                            t.equal(foundUser.tracks.length, 1);
+
+                            var point:IDataPoint = foundUser.tracks[0].dataPoints[50];
+                            var track = foundUser.tracks[0];
+                            point.xAxis = "xAxis";
+                            point.yAxis = "yAxis";
+
+                            db.trackStorage.updateDataPoint(track, point, (err) =>{
+                                db.userStorage.getTracksForUser(u, user =>{
+                                    t.equal(user.tracks[0].dataPoints[50].xAxis, point.xAxis);
+                                    t.equal(user.tracks[0].dataPoints[50].yAxis, point.yAxis);
+                                    t.done();
+                                })
+                            });
+                        })
+                ));
+        });
     },
 
     end: (t:ITest) =>{

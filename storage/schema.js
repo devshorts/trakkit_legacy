@@ -58,6 +58,16 @@ var db = (function () {
         }
         return obj;
     };
+    db.prototype.extractMongoFields = function (item, name) {
+        var ret = {
+        };
+        for(var key in item) {
+            if(key != "_v" && key != "_id") {
+                ret[name + ".$." + key] = item[key];
+            }
+        }
+        return ret;
+    };
     db.prototype.saveAll = function (docs, callback) {
         var count = 0;
         docs.forEach(function (doc, _, _) {
