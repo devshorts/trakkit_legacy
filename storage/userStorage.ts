@@ -10,6 +10,7 @@ import schema = module("schema");
 
 var storage = new schema.db();
 
+
 export class userStorage{
     public getTracksForUser(user:IUser, callback:(IUser) => void){
         schema.Track.find({"user" : user._id}, (err, tracks) =>{

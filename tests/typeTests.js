@@ -1,4 +1,5 @@
 var db = require("../storage/storageContainer")
+var log = require("../utils/log");
 exports.group = {
     init: function (t) {
         db.storage.init("test", true);
@@ -57,12 +58,36 @@ exports.group = {
         u.save(function () {
             u.name = "crapper";
             u.save(function () {
-                return createTrack(t, u, function () {
-                    return createTrack(t, u, function () {
+                return createTrack(t, u, function (_) {
+                    return createTrack(t, u, function (_) {
                         return db.userStorage.getTracksForUser(u, function (foundUser) {
                             t.equal(foundUser.tracks.length, 2);
                             t.done();
                         });
+                    });
+                });
+            });
+        });
+    },
+    removeTrackPoints: function (test) {
+        var u = db.storage.newUser();
+        u.name = "updateTrackPoints";
+        u.save(function () {
+            createTrack(test, u, function (track) {
+                var currentPoints = track.dataPoints.length;
+                var filteredPoints = track.dataPoints.filter(function (elem) {
+                    return elem.xAxis == "x0";
+                });
+                db.trackStorage.removeDataPoints(track, filteredPoints, function (err) {
+                    if(err) {
+                        log.debug(err);
+                        test.done();
+                        return;
+                    }
+                    db.userStorage.getTracksForUser(u, function (foundUser) {
+                        var foundTrack = foundUser.tracks[0];
+                        test.equal(foundTrack.dataPoints.length, currentPoints - 1);
+                        test.done();
                     });
                 });
             });
@@ -74,17 +99,17 @@ exports.group = {
         u.save(function () {
             u.name = "crapper";
             u.save(function () {
-                return createTrack(t, u, function () {
+                return createTrack(t, u, function (insertedTrack) {
                     return db.userStorage.getTracksForUser(u, function (foundUser) {
                         t.equal(foundUser.tracks.length, 1);
-                        var point = foundUser.tracks[0].dataPoints[50];
+                        var point = foundUser.tracks[0].dataPoints[4];
                         var track = foundUser.tracks[0];
                         point.xAxis = "xAxis";
                         point.yAxis = "yAxis";
                         db.trackStorage.updateDataPoint(track, point, function (err) {
                             db.userStorage.getTracksForUser(u, function (user) {
-                                t.equal(user.tracks[0].dataPoints[50].xAxis, point.xAxis);
-                                t.equal(user.tracks[0].dataPoints[50].yAxis, point.yAxis);
+                                t.equal(user.tracks[0].dataPoints[4].xAxis, point.xAxis);
+                                t.equal(user.tracks[0].dataPoints[4].yAxis, point.yAxis);
                                 t.done();
                             });
                         });
@@ -100,7 +125,7 @@ exports.group = {
 };
 function createTrack(t, u, callback) {
     var track = db.storage.newTrack();
-    for(var i = 0; i < 100; i++) {
+    for(var i = 0; i < 5; i++) {
         var dp = db.storage.newDataPoint();
         dp.xAxis = "x" + i;
         dp.yAxis = "y" + i;
@@ -110,9 +135,7 @@ function createTrack(t, u, callback) {
     track.user = u._id;
     track.save(function () {
         db.schema.Track.findOne(track._id).populate("user").exec(function (err, tr) {
-            t.equal(u.name, tr.user.name);
-            t.equal(tr.dataPoints.length, 100);
-            callback();
+            callback(tr);
         });
     });
 }

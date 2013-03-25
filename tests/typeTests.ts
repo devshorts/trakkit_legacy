@@ -11,6 +11,8 @@
 
 import db = module("../storage/storageContainer");
 
+var log = require("../utils/log")
+
 export var group = {
     init: (t:ITest) =>{
         db.storage.init("test", true);
@@ -76,14 +78,40 @@ export var group = {
         u.save(() =>{
             u.name = "crapper";
             u.save(() =>
-            createTrack(t, u, () =>
-                createTrack(t, u, () =>
-                        db.userStorage.getTracksForUser(u, (foundUser) => {
-                        t.equal(foundUser.tracks.length, 2);
-                        t.done();
+                createTrack(t, u, _ =>
+                        createTrack(t, u, _ =>
+                                db.userStorage.getTracksForUser(u, (foundUser) => {
+                                    t.equal(foundUser.tracks.length, 2);
+                                    t.done();
+                                })
+                        )
+                ));
+        });
+    },
+
+    removeTrackPoints: (test:ITest) => {
+        var u = db.storage.newUser();
+        u.name = "updateTrackPoints";
+        u.save(() =>{
+            createTrack(test, u, track =>{
+                var currentPoints = track.dataPoints.length;
+                var filteredPoints = track.dataPoints.filter(elem => elem.xAxis == "x0");
+
+                db.trackStorage.removeDataPoints(track, filteredPoints, err => {
+                    if(err){
+                        log.debug(err);
+                        test.done();
+                        return;
+                    }
+
+                    db.userStorage.getTracksForUser(u, foundUser => {
+                        var foundTrack:ITrack = foundUser.tracks[0];
+                        test.equal(foundTrack.dataPoints.length, currentPoints - 1);
+                        test.done();
                     })
-                )
-            ));
+                })
+
+            });
         });
     },
 
@@ -93,19 +121,19 @@ export var group = {
         u.save(() =>{
             u.name = "crapper";
             u.save(() =>
-                createTrack(t, u, () =>
+                createTrack(t, u, insertedTrack =>
                         db.userStorage.getTracksForUser(u, (foundUser) => {
                             t.equal(foundUser.tracks.length, 1);
 
-                            var point:IDataPoint = foundUser.tracks[0].dataPoints[50];
+                            var point:IDataPoint = foundUser.tracks[0].dataPoints[4];
                             var track = foundUser.tracks[0];
                             point.xAxis = "xAxis";
                             point.yAxis = "yAxis";
 
                             db.trackStorage.updateDataPoint(track, point, (err) =>{
                                 db.userStorage.getTracksForUser(u, user =>{
-                                    t.equal(user.tracks[0].dataPoints[50].xAxis, point.xAxis);
-                                    t.equal(user.tracks[0].dataPoints[50].yAxis, point.yAxis);
+                                    t.equal(user.tracks[0].dataPoints[4].xAxis, point.xAxis);
+                                    t.equal(user.tracks[0].dataPoints[4].yAxis, point.yAxis);
                                     t.done();
                                 })
                             });
@@ -120,10 +148,10 @@ export var group = {
     }
 }
 
-function createTrack(t:ITest, u:IUser, callback:() => void){
+function createTrack(t:ITest, u:IUser, callback:(track:ITrack) => void){
     var track = db.storage.newTrack();
 
-    for(var i = 0;i<100;i++){
+    for(var i = 0;i<5;i++){
         var dp = db.storage.newDataPoint();
         dp.xAxis = "x" + i;
         dp.yAxis = "y" + i;
@@ -137,11 +165,7 @@ function createTrack(t:ITest, u:IUser, callback:() => void){
         db.schema.Track.findOne(track._id)
             .populate("user")
             .exec((err, tr:ITrack) =>{
-
-                t.equal(u.name, tr.user.name);
-                t.equal(tr.dataPoints.length, 100);
-
-                callback();
+                callback(tr);
             });
     });
 }

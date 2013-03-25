@@ -32,6 +32,7 @@ export class db{
 
         try{
             mongoose.connect('localhost', dbName);
+            //mongoose.set('debug', true)
         }
         catch(e){
             if(!ignoreFailures){
@@ -81,6 +82,15 @@ export class db{
             }
         }
         return ret;
+    }
+
+    extractIds(items:IMongooseBase[]){
+        var ids = items.map(item => {
+            var objId = item.toObject();
+            var id = objId["_id"].toString();
+            return this.newObjectId(id);
+        });
+        return ids;
     }
 
     saveAll(docs:IMongooseBase[], callback:() => any){

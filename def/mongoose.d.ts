@@ -41,14 +41,16 @@ interface IUpdateOptions{
     strict?:Boolean;
 }
 interface IMongooseSearchable{
+    collection:any;
     findOne(item:any, callback?:ICallback) : IChainable;
     find(id:string, fields?:any, options?:any, callback?:ICallback) : IChainable;
     find(propBag:Object, callback?:ICallback) : IChainable;
     remove(item:any, callback:IErrorCallback) : void;
-    update(query:Object, updatedFields:Object, options?:IUpdateOptions, callback?:(error:String, numResponses:Number, rawResponse:any) => void);
+    update(query:Object, updatedFields:Object, options?:IUpdateOptions, callback?:(error:String, numResponses?:Number, rawResponse?:any) => void);
 }
 
 interface IMongooseBase {
+    _id:String;
     save(item: IEmptyCallback) : void;
     push(item:IMongooseBase):void;
     toObject():Object;

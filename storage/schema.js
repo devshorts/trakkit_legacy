@@ -68,6 +68,15 @@ var db = (function () {
         }
         return ret;
     };
+    db.prototype.extractIds = function (items) {
+        var _this = this;
+        var ids = items.map(function (item) {
+            var objId = item.toObject();
+            var id = objId["_id"].toString();
+            return _this.newObjectId(id);
+        });
+        return ids;
+    };
     db.prototype.saveAll = function (docs, callback) {
         var count = 0;
         docs.forEach(function (doc, _, _) {

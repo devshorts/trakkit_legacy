@@ -33,4 +33,13 @@ export class trackStorage{
                 callback(err)
             });
     }
+
+    removeDataPoints(track:ITrack, points:IDataPoint[], callback:(err:String) => void){
+        schema.Track.update({},
+            {
+                $pull: { dataPoints: { xAxis : { $in :  storage.extractIds(points)}}}
+            },
+            {multi : true, upsert: false},
+            err => callback(err));
+    }
 }

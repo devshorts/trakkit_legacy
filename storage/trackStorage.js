@@ -19,6 +19,23 @@ var trackStorage = (function () {
             callback(err);
         });
     };
+    trackStorage.prototype.removeDataPoints = function (track, points, callback) {
+        schema.Track.update({
+        }, {
+            $pull: {
+                dataPoints: {
+                    xAxis: {
+                        $in: storage.extractIds(points)
+                    }
+                }
+            }
+        }, {
+            multi: true,
+            upsert: false
+        }, function (err) {
+            return callback(err);
+        });
+    };
     return trackStorage;
 })();
 exports.trackStorage = trackStorage;
