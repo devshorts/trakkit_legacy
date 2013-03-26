@@ -42,7 +42,6 @@ exports.group = {
             }
             db.storage.saveAll(dpList, function () {
                 console.log(u._id);
-                var id = db.storage.newObjectId(u._id);
                 db.schema.DataPoint.find({
                     "user._id": u._id
                 }, function (err, dataPoints) {
@@ -54,9 +53,9 @@ exports.group = {
     },
     buildTrack: function (t) {
         var u = db.storage.newUser();
-        u.name = "buildTrackUser";
+        u.name = "abc";
         u.save(function () {
-            u.name = "crapper";
+            u.name = "cdf";
             u.save(function () {
                 return createTrack(t, u, function (_) {
                     return createTrack(t, u, function (_) {
@@ -134,9 +133,7 @@ function createTrack(t, u, callback) {
     }
     track.user = u._id;
     track.save(function () {
-        db.schema.Track.findOne(track._id).populate("user").exec(function (err, tr) {
-            callback(tr);
-        });
+        return db.trackStorage.getUserForTrack(track, callback);
     });
 }
 //@ sourceMappingURL=typeTests.js.map

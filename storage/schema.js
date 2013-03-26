@@ -46,7 +46,7 @@ var db = (function () {
         return new exports.Track();
     };
     db.prototype.newObjectId = function (id) {
-        return mongoose.Schema.ObjectId(id);
+        return mongoose.Types.ObjectId(id);
     };
     db.prototype.pruneObject = function (data) {
         var obj = data.toObject();
@@ -69,17 +69,13 @@ var db = (function () {
         return ret;
     };
     db.prototype.extractIds = function (items) {
-        var _this = this;
-        var ids = items.map(function (item) {
-            var objId = item.toObject();
-            var id = objId["_id"].toString();
-            return _this.newObjectId(id);
+        return items.map(function (item) {
+            return item._id;
         });
-        return ids;
     };
     db.prototype.saveAll = function (docs, callback) {
         var count = 0;
-        docs.forEach(function (doc, _, _) {
+        docs.forEach(function (doc, _, __) {
             doc.save(function () {
                 count++;
                 if(count == docs.length) {

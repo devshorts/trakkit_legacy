@@ -1,5 +1,4 @@
 ///<reference path='../def/all.ts'/>
-///<reference path='../def/lib.d.ts'/>
 
 var mongoose:any = require("mongoose");
 
@@ -58,7 +57,7 @@ export class db{
     }
 
     newObjectId(id:String):any{
-        return mongoose.Schema.ObjectId(id);
+        return mongoose.Types.ObjectId(id);
     }
 
     pruneObject(data:IMongooseBase):Object{
@@ -85,17 +84,12 @@ export class db{
     }
 
     extractIds(items:IMongooseBase[]){
-        var ids = items.map(item => {
-            var objId = item.toObject();
-            var id = objId["_id"].toString();
-            return this.newObjectId(id);
-        });
-        return ids;
+        return items.map(item => item._id);
     }
 
     saveAll(docs:IMongooseBase[], callback:() => any){
         var count = 0;
-        docs.forEach( (doc,_,_)=> {
+        docs.forEach( (doc,_,__)=> {
             doc.save(() => {
                 count++;
                 if( count == docs.length ){

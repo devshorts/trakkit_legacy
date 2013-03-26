@@ -19,6 +19,14 @@ export class trackStorage{
         return storage.extractMongoFields(point.toObject(), "dataPoints");
     }
 
+    getUserForTrack(track:ITrack, callback:(ITrack) => void){
+        schema.Track.findOne({_id : track._id })
+            .populate("user")
+            .exec((err, tr:ITrack) =>{
+                callback(tr);
+            });
+    }
+
     updateDataPoint(track:ITrack, point:IDataPoint, callback:(err:String) => void){
         schema.Track.update(
             {
@@ -35,11 +43,12 @@ export class trackStorage{
     }
 
     removeDataPoints(track:ITrack, points:IDataPoint[], callback:(err:String) => void){
-        schema.Track.update({},
+        schema.Track.update(track._id,
             {
-                $pull: { dataPoints: { xAxis : { $in :  storage.extractIds(points)}}}
+                $pull: { dataPoints: { _id : { $in : storage.extractIds(points)}}}
             },
-            {multi : true, upsert: false},
-            err => callback(err));
+            {multi: true, upsert: false},
+            (err, item) => callback(err));
+
     }
 }

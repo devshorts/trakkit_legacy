@@ -6,6 +6,13 @@ var trackStorage = (function () {
     trackStorage.prototype.pointFields = function (point) {
         return storage.extractMongoFields(point.toObject(), "dataPoints");
     };
+    trackStorage.prototype.getUserForTrack = function (track, callback) {
+        schema.Track.findOne({
+            _id: track._id
+        }).populate("user").exec(function (err, tr) {
+            callback(tr);
+        });
+    };
     trackStorage.prototype.updateDataPoint = function (track, point, callback) {
         schema.Track.update({
             "_id": track._id,
@@ -20,11 +27,10 @@ var trackStorage = (function () {
         });
     };
     trackStorage.prototype.removeDataPoints = function (track, points, callback) {
-        schema.Track.update({
-        }, {
+        schema.Track.update(track._id, {
             $pull: {
                 dataPoints: {
-                    xAxis: {
+                    _id: {
                         $in: storage.extractIds(points)
                     }
                 }
@@ -32,7 +38,7 @@ var trackStorage = (function () {
         }, {
             multi: true,
             upsert: false
-        }, function (err) {
+        }, function (err, item) {
             return callback(err);
         });
     };

@@ -61,8 +61,6 @@ export var group = {
             db.storage.saveAll(dpList, ()=>{
                 console.log(u._id);
 
-                var id = db.storage.newObjectId(u._id);
-
                 db.schema.DataPoint.find({"user._id" : u._id }, (err, dataPoints) => {
                     console.log(dataPoints);
                     t.done();
@@ -74,18 +72,17 @@ export var group = {
 
     buildTrack: (t:ITest) =>{
         var u = db.storage.newUser();
-        u.name = "buildTrackUser";
+        u.name = "abc";
         u.save(() =>{
-            u.name = "crapper";
+            u.name = "cdf";
             u.save(() =>
                 createTrack(t, u, _ =>
-                        createTrack(t, u, _ =>
-                                db.userStorage.getTracksForUser(u, (foundUser) => {
-                                    t.equal(foundUser.tracks.length, 2);
-                                    t.done();
-                                })
-                        )
-                ));
+                createTrack(t, u, _ =>
+                        db.userStorage.getTracksForUser(u, (foundUser) => {
+                            t.equal(foundUser.tracks.length, 2);
+                            t.done();
+                        })
+                )));
         });
     },
 
@@ -110,7 +107,6 @@ export var group = {
                         test.done();
                     })
                 })
-
             });
         });
     },
@@ -161,11 +157,5 @@ function createTrack(t:ITest, u:IUser, callback:(track:ITrack) => void){
 
     track.user = u._id;
 
-    track.save(()=>{
-        db.schema.Track.findOne(track._id)
-            .populate("user")
-            .exec((err, tr:ITrack) =>{
-                callback(tr);
-            });
-    });
+    track.save(()=> db.trackStorage.getUserForTrack(track, callback));
 }
