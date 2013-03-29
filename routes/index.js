@@ -3,7 +3,10 @@
  * GET home page.
  */
 
+var twitterRoutes = require("./twitterRoutes");
+var userRoutes = require("./userRoutes");
+
 module.exports = function(app){
-    require("./twitterRoutes").init(app);
-    require("./userRoutes").init(app);
+    new twitterRoutes.twitterRoutes(app);
+    new userRoutes.userRoutes(app);
 };

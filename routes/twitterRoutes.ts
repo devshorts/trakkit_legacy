@@ -8,8 +8,12 @@
 
 import db = module("../storage/storageContainer");
 
-export function init(app:any) {
-    app.get("twitter/success", (req, res) => {
-        res.send("tests");
-    });
+import routeBase = module("requestBase")
+
+export class twitterRoutes extends routeBase.requestBase{
+    constructor(app:ExpressApplication) {
+        app.get("/twitter/success", (req, res) => {
+            res.send(req.user.name);
+        });
+    }
 }

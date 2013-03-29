@@ -11,7 +11,7 @@ import db = module("../storage/storageContainer");
 var twitterStrategy = require('passport-twitter').Strategy;
 
 export class twitterAuth{
-    constructor(passport:any, app:any){
+    constructor(passport:any, app:ExpressApplication){
         passport.use(new twitterStrategy({
                 consumerKey: "HNRQcQBD7V0ZL45aXS1FIQ",
                 consumerSecret: "tV10jDXBPFCruEM0q8ixQDhRhNX79n4bdGRRqwloCy4",

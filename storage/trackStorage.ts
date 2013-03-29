@@ -43,7 +43,7 @@ export class trackStorage{
     }
 
     removeDataPoints(track:ITrack, points:IDataPoint[], callback:(err:String) => void){
-        schema.Track.update(track._id,
+        schema.Track.update({"_id": track._id},
             {
                 $pull: { dataPoints: { _id : { $in : storage.extractIds(points)}}}
             },

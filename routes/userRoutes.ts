@@ -6,10 +6,25 @@
  * To change this template use File | Settings | File Templates.
  */
 
+/// <reference path="../d.ts/DefinitelyTyped/express/express.d.ts" />
+
 import db = module("../storage/storageContainer");
 
-export function init(app:any) {
-    app.get("/users", (req, res) => {
-        res.send(req.user.name);
-    });
+import base = module("./requestBase");
+
+export class userRoutes {
+
+    constructor(app:ExpressApplication) {
+        var requestUtils = new base.requestBase();
+
+        app.get("/users", requestUtils.ensureAuthenticated, (req, res) => {
+            res.send(req.user.name);
+        });
+
+        app.get("/usersUnsecure", (req, res) => {
+            res.send("unsecure");
+        });
+    }
+
 }
+

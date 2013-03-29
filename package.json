@@ -13,6 +13,7 @@
         "passport-twitter": "0.1.4",
         "log4js": "0.5.7",
         "nodeunit": "0.7.4",
-        "typescript-require":  "0.2.2"
+        "typescript-require":  "0.2.2",
+        "tsd" : "0.3.1"
     }
 }

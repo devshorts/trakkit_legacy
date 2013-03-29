@@ -27,7 +27,9 @@ var trackStorage = (function () {
         });
     };
     trackStorage.prototype.removeDataPoints = function (track, points, callback) {
-        schema.Track.update(track._id, {
+        schema.Track.update({
+            "_id": track._id
+        }, {
             $pull: {
                 dataPoints: {
                     _id: {
