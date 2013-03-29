@@ -7,7 +7,7 @@ var twitterAuth = (function () {
             consumerSecret: "tV10jDXBPFCruEM0q8ixQDhRhNX79n4bdGRRqwloCy4",
             callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
         }, function (token, tokenSecret, profile, done) {
-            db.userStorage.getTwitterUser(profile, true, function (user) {
+            db.userStorage.getTwitterUser(profile, function (user) {
                 return done(null, user);
             });
         }));

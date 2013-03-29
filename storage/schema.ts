@@ -6,7 +6,11 @@ var mongoose:any = require("mongoose");
 var userSchema = new mongoose.Schema(
     {
         name: String,
-        twitterId:String
+        twitterId:String,
+        facebookId:String,
+        googleId:String,
+        photoUrl:String,
+        email:String
     });
 
 var dataPointSchema = new mongoose.Schema({

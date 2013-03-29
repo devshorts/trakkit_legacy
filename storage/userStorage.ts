@@ -7,42 +7,65 @@
  */
 
 import schema = module("schema");
+import util = module("../utils/util");
 
 var storage = new schema.db();
 
 
 export class userStorage{
-    public getUser(id:String, callback:(string, IUser) => void){
+    getUser(id:String, callback:(string, IUser) => void){
         schema.User.findOne({"_id" : id}, (err, user) => callback(err, user));
     }
 
-    public getTracksForUser(user:IUser, callback:(IUser) => void){
+    getTracksForUser(user:IUser, callback:(IUser) => void){
         schema.Track.find({"user" : user._id}, (err, tracks) =>{
             user.tracks = tracks;
             callback(user);
         })
     }
 
-    public getTwitterUser(twitterProperties:any, insertIfNull:Boolean, callback:(IUser) => void){
-        var twitterId:String = twitterProperties.id;
-        var name:String = twitterProperties.displayName;
-        var newUser = storage.newUser();
+    getTwitterUser(properties:IPassportProvider, callback:(IUser) => void){
+        this.findOrOAuthAddUser(properties, "twitterId", callback);
+    }
 
-        newUser.name = name;
-        newUser.twitterId = twitterId;
+    getFacebookUser(properties:IPassportProvider, callback:(IUser) => void){
+        this.findOrOAuthAddUser(properties, "facebookId", callback);
+    }
 
-        schema.User.findOne({"twitterId" : twitterId}, (err, user) => {
-            if(user == null){
-                if(insertIfNull){
-                    newUser.save(() => callback(newUser));
-                }
-                else{
-                    callback(null);
-                }
+    getGoogleUser(properties:IPassportProvider, callback:(IUser) => void){
+        this.findOrOAuthAddUser(properties, "googleId", callback);
+    }
+
+    findOrOAuthAddUser(properties:IPassportProvider, findId:String, callback:(IUser) => void){
+
+        var searchable = {};
+        searchable[findId] = properties.id;
+
+        schema.User.findOne(searchable, (err, user) => {
+            if(user != null){
+                callback(user);
             }
             else{
-                callback(user);
+                this.createOAuthUser(properties, findId, callback);
             }
         });
     }
+
+    createOAuthUser (properties:IPassportProvider, findId:String, callback:(IUser) => void) {
+        var name:String = properties.displayName;
+        var newUser = storage.newUser();
+
+        if(!util.collection.isNullOrEmpty(properties.emails)){
+            newUser.email = properties.emails[0].value;
+        }
+
+        if(!util.collection.isNullOrEmpty(properties.photos)){
+            newUser.photoUrl = properties.photos[0].value;
+        }
+
+        newUser.name = name;
+        newUser[findId] = properties.id;
+
+        newUser.save(() => callback(newUser));
+    };
 }

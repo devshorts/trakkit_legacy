@@ -1,4 +1,5 @@
 var schema = require("./schema")
+var util = require("../utils/util")
 var storage = new schema.db();
 var userStorage = (function () {
     function userStorage() { }
@@ -17,26 +18,41 @@ var userStorage = (function () {
             callback(user);
         });
     };
-    userStorage.prototype.getTwitterUser = function (twitterProperties, insertIfNull, callback) {
-        var twitterId = twitterProperties.id;
-        var name = twitterProperties.displayName;
-        var newUser = storage.newUser();
-        newUser.name = name;
-        newUser.twitterId = twitterId;
-        schema.User.findOne({
-            "twitterId": twitterId
-        }, function (err, user) {
-            if(user == null) {
-                if(insertIfNull) {
-                    newUser.save(function () {
-                        return callback(newUser);
-                    });
-                } else {
-                    callback(null);
-                }
-            } else {
+    userStorage.prototype.getTwitterUser = function (properties, callback) {
+        this.findOrOAuthAddUser(properties, "twitterId", callback);
+    };
+    userStorage.prototype.getFacebookUser = function (properties, callback) {
+        this.findOrOAuthAddUser(properties, "facebookId", callback);
+    };
+    userStorage.prototype.getGoogleUser = function (properties, callback) {
+        this.findOrOAuthAddUser(properties, "googleId", callback);
+    };
+    userStorage.prototype.findOrOAuthAddUser = function (properties, findId, callback) {
+        var _this = this;
+        var searchable = {
+        };
+        searchable[findId] = properties.id;
+        schema.User.findOne(searchable, function (err, user) {
+            if(user != null) {
                 callback(user);
+            } else {
+                _this.createOAuthUser(properties, findId, callback);
             }
+        });
+    };
+    userStorage.prototype.createOAuthUser = function (properties, findId, callback) {
+        var name = properties.displayName;
+        var newUser = storage.newUser();
+        if(!util.collection.isNullOrEmpty(properties.emails)) {
+            newUser.email = properties.emails[0].value;
+        }
+        if(!util.collection.isNullOrEmpty(properties.photos)) {
+            newUser.photoUrl = properties.photos[0].value;
+        }
+        newUser.name = name;
+        newUser[findId] = properties.id;
+        newUser.save(function () {
+            return callback(newUser);
         });
     };
     return userStorage;

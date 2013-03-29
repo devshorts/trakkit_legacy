@@ -18,7 +18,7 @@ export class twitterAuth{
                 callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
             },
             (token, tokenSecret, profile, done) => {
-                db.userStorage.getTwitterUser(profile, true, user => done(null, user));
+                db.userStorage.getTwitterUser(profile, user => done(null, user));
             }
         ));
 

@@ -9,3 +9,4 @@
 ///<reference path="./mongoose.d.ts"/>
 ///<reference path="./nodeUnit.d.ts"/>
 ///<reference path="./schemaDef.d.ts"/>
+///<reference path="./passport.d.ts"/>

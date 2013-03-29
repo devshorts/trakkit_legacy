@@ -21,6 +21,10 @@ interface ITrack extends IMongooseBase{
 
 interface IUser extends IMongooseBase{
     name: string;
+    photoUrl:String;
+    facebookId:String;
+    googleId:String;
+    email:String;
     twitterId: string;
     tracks: ITrack[];
 }
