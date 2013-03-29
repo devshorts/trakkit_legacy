@@ -1,4 +1,4 @@
-
+var db = require("../storage/storageContainer")
 var base = require("./requestBase")
 var userRoutes = (function () {
     function userRoutes(app) {
@@ -8,6 +8,13 @@ var userRoutes = (function () {
         });
         app.get("/usersUnsecure", function (req, res) {
             res.send("unsecure");
+        });
+        app.get("/user/:name/images", requestUtils.ensureAuthenticated, function (req, res) {
+            db.userStorage.getUserByUsername(req.params.name, function (err, foundUser) {
+                res.render("user.jade", {
+                    user: foundUser.toObject()
+                });
+            });
         });
     }
     return userRoutes;

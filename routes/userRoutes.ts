@@ -24,6 +24,12 @@ export class userRoutes {
         app.get("/usersUnsecure", (req, res) => {
             res.send("unsecure");
         });
+
+        app.get("/user/:name/images", requestUtils.ensureAuthenticated, (req, res) => {
+            db.userStorage.getUserByUsername(req.params.name, (err, foundUser) => {
+                res.render("user.jade", {user: foundUser.toObject()})
+            });
+        });
     }
 
 }

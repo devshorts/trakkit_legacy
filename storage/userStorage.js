@@ -10,6 +10,13 @@ var userStorage = (function () {
             return callback(err, user);
         });
     };
+    userStorage.prototype.getUserByUsername = function (userName, callback) {
+        schema.User.findOne({
+            "name": userName
+        }, function (err, user) {
+            return callback(err, user);
+        });
+    };
     userStorage.prototype.getTracksForUser = function (user, callback) {
         schema.Track.find({
             "user": user._id

@@ -17,6 +17,10 @@ export class userStorage{
         schema.User.findOne({"_id" : id}, (err, user) => callback(err, user));
     }
 
+    getUserByUsername(userName:String, callback:(string, IUser) => void){
+        schema.User.findOne({"name" : userName}, (err, user) => callback(err, user));
+    }
+
     getTracksForUser(user:IUser, callback:(IUser) => void){
         schema.Track.find({"user" : user._id}, (err, tracks) =>{
             user.tracks = tracks;
