@@ -44,7 +44,7 @@ interface IMongooseSearchable{
     collection:any;
     findOne(item:any, callback?:ICallback) : IChainable;
     findOneAndUpdate(query:any, updateFields:Object, options?:IUpdateOptions, callback?:ICallback) : void;
-    find(id:string, fields?:any, options?:any, callback?:ICallback) : IChainable;
+    find(id:Object, fields?:any, options?:any, callback?:ICallback) : IChainable;
     find(propBag:Object, callback?:ICallback) : IChainable;
     remove(item:any, callback:IErrorCallback) : void;
     update(query:Object, updatedFields:Object, options?:IUpdateOptions, callback?:(error:String, numResponses?:Number, rawResponse?:any) => void);

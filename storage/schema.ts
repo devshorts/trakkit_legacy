@@ -5,7 +5,8 @@ var mongoose:any = require("mongoose");
 // Need to provide the same structure in 'mongoose' style format to define.
 var userSchema = new mongoose.Schema(
     {
-        name: String
+        name: String,
+        twitterId:String
     });
 
 var dataPointSchema = new mongoose.Schema({
@@ -89,7 +90,7 @@ export class db{
 
     saveAll(docs:IMongooseBase[], callback:() => any){
         var count = 0;
-        docs.forEach( (doc,_,__)=> {
+        docs.forEach(doc => {
             doc.save(() => {
                 count++;
                 if( count == docs.length ){

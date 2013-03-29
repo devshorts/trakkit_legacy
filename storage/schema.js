@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var userSchema = new mongoose.Schema({
-    name: String
+    name: String,
+    twitterId: String
 });
 var dataPointSchema = new mongoose.Schema({
     xAxis: String,
@@ -75,7 +76,7 @@ var db = (function () {
     };
     db.prototype.saveAll = function (docs, callback) {
         var count = 0;
-        docs.forEach(function (doc, _, __) {
+        docs.forEach(function (doc) {
             doc.save(function () {
                 count++;
                 if(count == docs.length) {

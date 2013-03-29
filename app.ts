@@ -1,20 +1,43 @@
-var db = require("./storage/storageContainer")
-var auth = require("./auth/oauthDefinitions")
-var express = require('express'), routes = require('./routes'), http = require('http'), path = require('path'), log = require("./utils/log.js"), passport = require('passport');
+/**
+ * Created with JetBrains WebStorm.
+ * User: anton.kropp
+ * Date: 3/28/13
+ * Time: 5:41 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+
+/**
+ * Module dependencies.
+ */
+
+import db = module("./storage/storageContainer");
+import auth = module("./auth/oauthDefinitions")
+
+var express = require('express')
+    , routes = require('./routes')
+    , http = require('http')
+    , path = require('path')
+    , log = require("./utils/log.js")
+    , passport = require('passport');
+
 var app = express();
-var AppEntry = (function () {
-    function AppEntry() {
+
+class AppEntry{
+    constructor(){
         this.initDb();
         this.setupRoutes();
         this.defineOAuth();
         this.startServer();
     }
-    AppEntry.prototype.initDb = function () {
+
+    initDb(){
         var schema = new db.schema.db();
         schema.init();
-    };
-    AppEntry.prototype.setupRoutes = function () {
-        app.configure('production', function () {
+    }
+
+    setupRoutes(){
+        app.configure('production', () => {
             app.set('views', __dirname + '/views');
             app.set('view engine', 'jade');
             app.use(express.favicon());
@@ -26,9 +49,9 @@ var AppEntry = (function () {
             app.use(passport.initialize());
             app.use(passport.session());
             app.use(app.router);
-            app.use(express.static(path.join(__dirname, 'public')));
-        });
-        app.configure('development', function () {
+            app.use(express.static(path.join(__dirname, 'public')))});
+
+        app.configure('development', () => {
             app.use(express.errorHandler());
             app.set('views', __dirname + '/views');
             app.set('view engine', 'jade');
@@ -41,26 +64,27 @@ var AppEntry = (function () {
             app.use(passport.initialize());
             app.use(passport.session());
             app.use(app.router);
-            app.use(express.static(path.join(__dirname, 'public')));
-        });
+            app.use(express.static(path.join(__dirname, 'public')))});
+
         routes(app);
-    };
-    AppEntry.prototype.startServer = function () {
+    }
+
+    startServer(){
         app.listen(3000);
         console.log('Listening on port 3000');
-    };
-    AppEntry.prototype.defineOAuth = function () {
-        passport.serializeUser(function (user, done) {
+    }
+
+    defineOAuth(){
+        passport.serializeUser((user, done) => {
             done(null, user.id);
         });
-        passport.deserializeUser(function (id, done) {
-            db.userStorage.getUser(id, function (err, user) {
-                return done(err, user);
-            });
-        });
+
+        passport.deserializeUser((id, done) => {
+            db.userStorage.getUser(id, (err, user) => done(err, user));
+        })
+
         var twitterSetup = new auth.twitterAuth(passport, app);
-    };
-    return AppEntry;
-})();
+    }
+}
+
 var application = new AppEntry();
-//@ sourceMappingURL=app.js.map

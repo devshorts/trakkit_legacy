@@ -21,6 +21,7 @@ interface ITrack extends IMongooseBase{
 
 interface IUser extends IMongooseBase{
     name: string;
+    twitterId: string;
     tracks: ITrack[];
 }
 
