@@ -10,6 +10,7 @@
 ///<reference path="../storage/schema.ts"/>
 
 import db = module("../storage/storageContainer");
+import oauth = module("../auth/oauthDefinitions");
 
 var log = require("../utils/log")
 
@@ -136,6 +137,15 @@ export var group = {
                         })
                 ));
         });
+    },
+
+    extractId:(t:ITest) => {
+        var str = "https://www.google.com/accounts/o8/id?id=AItOawmqjUnAoZHMZ8ongey5iz8bPcbSSVcnuhc"
+        var google = new oauth.googleAuth();
+        var id = google.extractId(str);
+
+        t.equal(id, "AItOawmqjUnAoZHMZ8ongey5iz8bPcbSSVcnuhc");
+        t.done();
     },
 
     end: (t:ITest) =>{

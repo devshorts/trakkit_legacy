@@ -15,6 +15,8 @@ import db = module("./storage/storageContainer");
 import auth = module("./auth/oauthDefinitions");
 import requestBase = module("./routes/requestBase");
 
+var fs = require('fs');
+
 var express = require('express')
     , routes = require('./routes')
     , http = require('http')
@@ -88,12 +90,33 @@ class AppEntry{
             db.userStorage.getUser(id, (err, user) => done(err, user));
         })
 
-        var twitterSetup = new auth.twitterAuth(passport, app);
+        new auth.twitterAuth().init(passport, app);
+        new auth.googleAuth().init(passport, app);
 
         // all requests other than oauth endpoints are secured
         var requestUtils = new requestBase.requestBase();
+
+        this.registerUnsecureLoginpage();
+
         app.all('*',requestUtils.ensureAuthenticated);
     }
+
+    registerUnsecureLoginpage(){
+        var loginContents = "";
+        fs.readFile(__dirname + '/public/login.html', 'utf8', function(err, text){
+            loginContents = text;
+        });
+
+        app.get("/login", (req, res) => {
+            if(req.isAuthenticated()){
+                res.redirect("/");
+            }
+            else{
+                res.send(loginContents);
+            }
+        });
+    }
+
 }
 
 var application = new AppEntry();

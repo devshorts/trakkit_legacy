@@ -3,6 +3,10 @@ var base = require("./requestBase")
 var userRoutes = (function () {
     function userRoutes(app) {
         var requestUtils = new base.requestBase();
+        app.get('/logout', function (req, res) {
+            req.logout();
+            res.redirect('/');
+        });
         app.get("/users", requestUtils.ensureAuthenticated, function (req, res) {
             res.send(req.user.name);
         });
@@ -10,6 +14,9 @@ var userRoutes = (function () {
             db.userStorage.getUserByUsername(req.params.name, function (err, foundUser) {
                 return res.send(foundUser.toObject());
             });
+        });
+        app.get("/user/current", requestUtils.ensureAuthenticated, function (req, res) {
+            res.send(req.user);
         });
         app.get("/usersUnsecure", function (req, res) {
             res.send("unsecure");

@@ -17,12 +17,21 @@ export class userRoutes {
     constructor(app:ExpressApplication) {
         var requestUtils = new base.requestBase();
 
+        app.get('/logout', (req:any, res) => {
+            req.logout();
+            res.redirect('/');
+        });
+
         app.get("/users", requestUtils.ensureAuthenticated, (req, res) => {
             res.send(req.user.name);
         });
 
         app.get("/users/:name", requestUtils.ensureAuthenticated, (req, res) => {
             db.userStorage.getUserByUsername(req.params.name, (err, foundUser) => res.send(foundUser.toObject()));
+        });
+
+        app.get("/user/current", requestUtils.ensureAuthenticated, (req, res) => {
+            res.send(req.user);
         });
 
         app.get("/usersUnsecure", (req, res) => {

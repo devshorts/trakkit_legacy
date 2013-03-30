@@ -16,7 +16,7 @@ export interface IIndexScope extends ng.IScope{
 module Controllers{
     export class IndexController{
         constructor($scope:IIndexScope, $http:ng.IHttpService){
-            $http.get("users/devshorts").success(user => {
+            $http.get("user/current").success(user => {
                 $scope.user = user
             });
         }

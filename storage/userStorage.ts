@@ -41,7 +41,6 @@ export class userStorage{
     }
 
     findOrOAuthAddUser(properties:IPassportProvider, findId:String, callback:(IUser) => void){
-
         var searchable = {};
         searchable[<any>findId] = properties.id;
 

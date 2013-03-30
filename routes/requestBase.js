@@ -4,7 +4,7 @@ var requestBase = (function () {
         if(req.isAuthenticated()) {
             return next();
         } else {
-            res.redirect('/auth/twitter');
+            res.redirect('/login');
             return null;
         }
     };

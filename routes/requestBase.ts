@@ -19,7 +19,7 @@ export class requestBase{
             return next();
         }
         else{
-            res.redirect('/auth/twitter');
+            res.redirect('/login');
             return null;
         }
     }

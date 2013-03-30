@@ -1,4 +1,5 @@
 var db = require("../storage/storageContainer")
+var oauth = require("../auth/oauthDefinitions")
 var log = require("../utils/log");
 exports.group = {
     init: function (t) {
@@ -116,6 +117,13 @@ exports.group = {
                 });
             });
         });
+    },
+    extractId: function (t) {
+        var str = "https://www.google.com/accounts/o8/id?id=AItOawmqjUnAoZHMZ8ongey5iz8bPcbSSVcnuhc";
+        var google = new oauth.googleAuth();
+        var id = google.extractId(str);
+        t.equal(id, "AItOawmqjUnAoZHMZ8ongey5iz8bPcbSSVcnuhc");
+        t.done();
     },
     end: function (t) {
         db.storage.disconnect();
