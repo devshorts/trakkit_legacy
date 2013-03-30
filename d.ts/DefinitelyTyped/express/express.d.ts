@@ -10,7 +10,7 @@
 
  =============================================== */
 
-/// <reference path="../node/node.d.ts" />
+
 
 interface Route {
     path: string;

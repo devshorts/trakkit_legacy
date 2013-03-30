@@ -43,7 +43,7 @@ export class userStorage{
     findOrOAuthAddUser(properties:IPassportProvider, findId:String, callback:(IUser) => void){
 
         var searchable = {};
-        searchable[findId] = properties.id;
+        searchable[<any>findId] = properties.id;
 
         schema.User.findOne(searchable, (err, user) => {
             if(user != null){
@@ -68,7 +68,7 @@ export class userStorage{
         }
 
         newUser.name = name;
-        newUser[findId] = properties.id;
+        newUser[<any>findId] = properties.id;
 
         newUser.save(() => callback(newUser));
     };

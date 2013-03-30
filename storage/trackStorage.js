@@ -19,7 +19,7 @@ var trackStorage = (function () {
             "dataPoints._id": point._id
         }, {
             $set: this.pointFields(point)
-        }, function (err, result) {
+        }, null, function (err, result) {
             if(err) {
                 log.debug("error updating datapoint: " + err);
             }

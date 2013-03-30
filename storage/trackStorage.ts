@@ -34,6 +34,7 @@ export class trackStorage{
                 "dataPoints._id": point._id
             },
             {$set: this.pointFields(point)},
+            null,
             (err, result) => {
                 if(err){
                     log.debug("error updating datapoint: " + err);

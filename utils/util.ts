@@ -7,7 +7,7 @@
  */
 
 export class collection{
-    static isNullOrEmpty(arr:Array){
+    static isNullOrEmpty(arr:any[]){
         if(arr == null || arr.length == 0){
             return true;
         }
