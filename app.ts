@@ -92,31 +92,7 @@ class AppEntry{
 
         new auth.twitterAuth().init(passport, app);
         new auth.googleAuth().init(passport, app);
-
-        // all requests other than oauth endpoints are secured
-        var requestUtils = new requestBase.requestBase();
-
-        this.registerUnsecureLoginpage();
-
-        app.all('*',requestUtils.ensureAuthenticated);
     }
-
-    registerUnsecureLoginpage(){
-        var loginContents = "";
-        fs.readFile(__dirname + '/public/login.html', 'utf8', function(err, text){
-            loginContents = text;
-        });
-
-        app.get("/login", (req, res) => {
-            if(req.isAuthenticated()){
-                res.redirect("/");
-            }
-            else{
-                res.send(loginContents);
-            }
-        });
-    }
-
 }
 
 var application = new AppEntry();

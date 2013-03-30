@@ -50,7 +50,7 @@ export class twitterAuth implements IAuthorizer{
             passport.authenticate('twitter',
                 {
                     successRedirect: '/',
-                    failureRedirect: '/login'
+                    failureRedirect: '/login.html'
                 }));
     }
 }
@@ -82,7 +82,7 @@ export class googleAuth implements IAuthorizer{
         // logged in.  Otherwise, authentication has failed.
         app.get('/auth/google/return',
             passport.authenticate('google', { successRedirect: '/',
-                failureRedirect: '/login' }));
+                failureRedirect: '/login.html' }));
     }
 
     extractId(id:string){

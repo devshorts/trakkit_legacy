@@ -26,8 +26,8 @@ export class userRoutes {
             res.send(req.user.name);
         });
 
-        app.get("/users/:name", requestUtils.ensureAuthenticated, (req, res) => {
-            db.userStorage.getUserByUsername(req.params.name, (err, foundUser) => res.send(foundUser.toObject()));
+        app.get("/users/:id", requestUtils.ensureAuthenticated, (req, res) => {
+            db.userStorage.getUser(req.params.id, (err, foundUser) => res.send(foundUser.toObject()));
         });
 
         app.get("/user/current", requestUtils.ensureAuthenticated, (req, res) => {
@@ -44,6 +44,5 @@ export class userRoutes {
             });
         });
     }
-
 }
 

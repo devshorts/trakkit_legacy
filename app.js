@@ -1,6 +1,6 @@
 var db = require("./storage/storageContainer")
 var auth = require("./auth/oauthDefinitions")
-var requestBase = require("./routes/requestBase")
+
 var fs = require('fs');
 var express = require('express'), routes = require('./routes'), http = require('http'), path = require('path'), log = require("./utils/log.js"), passport = require('passport');
 var app = express();
@@ -63,22 +63,6 @@ var AppEntry = (function () {
         });
         new auth.twitterAuth().init(passport, app);
         new auth.googleAuth().init(passport, app);
-        var requestUtils = new requestBase.requestBase();
-        this.registerUnsecureLoginpage();
-        app.all('*', requestUtils.ensureAuthenticated);
-    };
-    AppEntry.prototype.registerUnsecureLoginpage = function () {
-        var loginContents = "";
-        fs.readFile(__dirname + '/public/login.html', 'utf8', function (err, text) {
-            loginContents = text;
-        });
-        app.get("/login", function (req, res) {
-            if(req.isAuthenticated()) {
-                res.redirect("/");
-            } else {
-                res.send(loginContents);
-            }
-        });
     };
     return AppEntry;
 })();

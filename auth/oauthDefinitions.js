@@ -21,7 +21,7 @@ var twitterAuth = (function () {
         app.get('/auth/twitter', passport.authenticate('twitter'));
         app.get('/auth/twitter/callback', passport.authenticate('twitter', {
             successRedirect: '/',
-            failureRedirect: '/login'
+            failureRedirect: '/login.html'
         }));
     };
     return twitterAuth;
@@ -43,7 +43,7 @@ var googleAuth = (function () {
         app.get('/auth/google', passport.authenticate('google'));
         app.get('/auth/google/return', passport.authenticate('google', {
             successRedirect: '/',
-            failureRedirect: '/login'
+            failureRedirect: '/login.html'
         }));
     };
     googleAuth.prototype.extractId = function (id) {
