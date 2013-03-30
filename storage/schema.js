@@ -42,13 +42,16 @@ var db = (function () {
         mongoose.disconnect();
     };
     db.prototype.newUser = function () {
-        return new exports.User();
+        var u = exports.User;
+        return new (u)();
     };
     db.prototype.newDataPoint = function () {
-        return new exports.DataPoint();
+        var d = exports.DataPoint;
+        return new (d)();
     };
     db.prototype.newTrack = function () {
-        return new exports.Track();
+        var t = exports.Track;
+        return new (t)();
     };
     db.prototype.newObjectId = function (id) {
         return mongoose.Types.ObjectId(id);

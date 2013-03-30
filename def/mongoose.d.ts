@@ -7,15 +7,15 @@
  */
 
 interface ICallback{
-    callback(error:string, item:any): void;
+    (error:string, item:any): void;
 }
 
 interface IEmptyCallback{
-    callback() : void;
+    () : void;
 }
 
 interface IErrorCallback{
-    callback(item?:string) : void;
+    (item?:string) : void;
 }
 
 interface IWhere{

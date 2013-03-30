@@ -1,4 +1,5 @@
 ///<reference path='../def/all.ts'/>
+///<reference path='../node_modules/typescript-require/typings/node.d.ts'/>
 
 var mongoose:any = require("mongoose");
 
@@ -24,9 +25,9 @@ var trackSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.ObjectId, ref:"User"}
 })
 
-export var User:IMongooseSearchable = <IMongooseSearchable><{ new() : IUser; }>mongoose.model('User', userSchema);
-export var DataPoint:IMongooseSearchable = <IMongooseSearchable><{ new() : IDataPoint; }>mongoose.model('DataPoint', dataPointSchema);
-export var Track:IMongooseSearchable = <IMongooseSearchable><{ new() : ITrack; }>mongoose.model('Track', trackSchema);
+export var User:IMongooseSearchable = mongoose.model('User', userSchema);
+export var DataPoint:IMongooseSearchable = mongoose.model('DataPoint', dataPointSchema);
+export var Track:IMongooseSearchable = mongoose.model('Track', trackSchema);
 
 export class db{
     init(dbName:string, ignoreFailures:bool){
@@ -50,15 +51,18 @@ export class db{
     }
 
     newUser():IUser{
-        return <IUser>new User();
+        var u:any = <any>User;
+        return new (<{ new() : IUser;}>u)();
     }
 
     newDataPoint():IDataPoint{
-        return <IDataPoint>new DataPoint();
+        var d:any = <any>DataPoint;
+        return new(<{ new() : IDataPoint; }>d)();
     }
 
     newTrack():ITrack{
-        return <ITrack>new Track();
+        var t:any = <any>Track;
+        return new(<{ new() : ITrack; }>t)();
     }
 
     newObjectId(id:String):any{
@@ -66,7 +70,7 @@ export class db{
     }
 
     pruneObject(data:IMongooseBase):Object{
-        var obj = data.toObject();
+        var obj:any = data.toObject();
         if(obj.hasOwnProperty("_id")){
             delete obj._id;
         }
