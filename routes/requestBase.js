@@ -3,9 +3,10 @@ var requestBase = (function () {
     requestBase.prototype.ensureAuthenticated = function (req, res, next) {
         if(req.isAuthenticated()) {
             return next();
+        } else {
+            res.redirect('/auth/twitter');
+            return null;
         }
-        res.redirect('/auth/twitter');
-        return null;
     };
     return requestBase;
 })();

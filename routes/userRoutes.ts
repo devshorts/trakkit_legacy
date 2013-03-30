@@ -21,6 +21,10 @@ export class userRoutes {
             res.send(req.user.name);
         });
 
+        app.get("/users/:name", requestUtils.ensureAuthenticated, (req, res) => {
+            db.userStorage.getUserByUsername(req.params.name, (err, foundUser) => res.send(foundUser.toObject()));
+        });
+
         app.get("/usersUnsecure", (req, res) => {
             res.send("unsecure");
         });

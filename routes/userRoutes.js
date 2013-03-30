@@ -6,6 +6,11 @@ var userRoutes = (function () {
         app.get("/users", requestUtils.ensureAuthenticated, function (req, res) {
             res.send(req.user.name);
         });
+        app.get("/users/:name", requestUtils.ensureAuthenticated, function (req, res) {
+            db.userStorage.getUserByUsername(req.params.name, function (err, foundUser) {
+                return res.send(foundUser.toObject());
+            });
+        });
         app.get("/usersUnsecure", function (req, res) {
             res.send("unsecure");
         });

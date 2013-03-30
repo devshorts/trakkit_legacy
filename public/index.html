@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" ng-app>
+<head>
+    <meta charset="utf-8">
+    <title>My HTML File</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/controllers.js"></script>
+</head>
+<body ng-controller="Controllers.IndexController">
+<p>Nothing here {{user.name}}</p>
+
+<img src="{{user.photoUrl}}"/>
+
+</body>
+</html>

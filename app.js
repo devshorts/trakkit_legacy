@@ -1,5 +1,6 @@
 var db = require("./storage/storageContainer")
 var auth = require("./auth/oauthDefinitions")
+var requestBase = require("./routes/requestBase")
 var express = require('express'), routes = require('./routes'), http = require('http'), path = require('path'), log = require("./utils/log.js"), passport = require('passport');
 var app = express();
 var AppEntry = (function () {
@@ -14,6 +15,7 @@ var AppEntry = (function () {
         schema.init(null, false);
     };
     AppEntry.prototype.setupRoutes = function () {
+        var staticMiddleware = express.static(path.join(__dirname, 'public'));
         app.configure('production', function () {
             app.set('views', __dirname + '/views');
             app.set('view engine', 'jade');
@@ -41,7 +43,7 @@ var AppEntry = (function () {
             app.use(passport.initialize());
             app.use(passport.session());
             app.use(app.router);
-            app.use(express.static(path.join(__dirname, 'public')));
+            app.use(staticMiddleware);
         });
         routes(app);
     };
@@ -59,6 +61,8 @@ var AppEntry = (function () {
             });
         });
         var twitterSetup = new auth.twitterAuth(passport, app);
+        var requestUtils = new requestBase.requestBase();
+        app.all('*', requestUtils.ensureAuthenticated);
     };
     return AppEntry;
 })();

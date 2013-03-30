@@ -15,8 +15,12 @@ export class requestBase{
     //   the request will proceed.  Otherwise, the user will be redirected to the
     //   login page.
     ensureAuthenticated(req, res, next) {
-        if (req.isAuthenticated()) { return next(); }
-        res.redirect('/auth/twitter');
-        return null;
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        else{
+            res.redirect('/auth/twitter');
+            return null;
+        }
     }
 }

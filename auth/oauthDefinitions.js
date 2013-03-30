@@ -13,7 +13,7 @@ var twitterAuth = (function () {
         }));
         app.get('/auth/twitter', passport.authenticate('twitter'));
         app.get('/auth/twitter/callback', passport.authenticate('twitter', {
-            successRedirect: '/twitter/success',
+            successRedirect: '/',
             failureRedirect: '/login'
         }));
     }

@@ -36,7 +36,7 @@ export class twitterAuth{
         app.get('/auth/twitter/callback',
             passport.authenticate('twitter',
                 {
-                    successRedirect: '/twitter/success',
+                    successRedirect: '/',
                     failureRedirect: '/login'
                 }));
     }

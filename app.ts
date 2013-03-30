@@ -12,7 +12,8 @@
  */
 
 import db = module("./storage/storageContainer");
-import auth = module("./auth/oauthDefinitions")
+import auth = module("./auth/oauthDefinitions");
+import requestBase = module("./routes/requestBase");
 
 var express = require('express')
     , routes = require('./routes')
@@ -37,6 +38,9 @@ class AppEntry{
     }
 
     setupRoutes(){
+
+        var staticMiddleware = express.static(path.join(__dirname, 'public'));
+
         app.configure('production', () => {
             app.set('views', __dirname + '/views');
             app.set('view engine', 'jade');
@@ -64,7 +68,8 @@ class AppEntry{
             app.use(passport.initialize());
             app.use(passport.session());
             app.use(app.router);
-            app.use(express.static(path.join(__dirname, 'public')))});
+            app.use(staticMiddleware);
+            });
 
         routes(app);
     }
@@ -84,6 +89,10 @@ class AppEntry{
         })
 
         var twitterSetup = new auth.twitterAuth(passport, app);
+
+        // all requests other than oauth endpoints are secured
+        var requestUtils = new requestBase.requestBase();
+        app.all('*',requestUtils.ensureAuthenticated);
     }
 }
 
