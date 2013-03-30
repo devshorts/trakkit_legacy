@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-/// <reference path="../d.ts/DefinitelyTyped/express/express.d.ts" />
+/// <reference path="../def/all.d.ts" />
 
 import db = module("../storage/storageContainer");
 

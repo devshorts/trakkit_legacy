@@ -33,7 +33,7 @@ class AppEntry{
 
     initDb(){
         var schema = new db.schema.db();
-        schema.init();
+        schema.init(null, false);
     }
 
     setupRoutes(){

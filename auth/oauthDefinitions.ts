@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+/// <reference path="../def/all.d.ts" />
+
 import db = module("../storage/storageContainer");
 
 var twitterStrategy = require('passport-twitter').Strategy;

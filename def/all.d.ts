@@ -10,3 +10,4 @@
 ///<reference path="./nodeUnit.d.ts"/>
 ///<reference path="./schemaDef.d.ts"/>
 ///<reference path="./passport.d.ts"/>
+/// <reference path="../d.ts/DefinitelyTyped/express/express.d.ts" />

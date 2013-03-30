@@ -11,7 +11,7 @@ var AppEntry = (function () {
     }
     AppEntry.prototype.initDb = function () {
         var schema = new db.schema.db();
-        schema.init();
+        schema.init(null, false);
     };
     AppEntry.prototype.setupRoutes = function () {
         app.configure('production', function () {
