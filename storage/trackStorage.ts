@@ -29,6 +29,13 @@ export class trackStorage{
         track.save(callback);
     }
 
+    safeRemoveTrack(trackId:string, user:IUser, callback:IErrorCallback){
+        schema.Track.remove({
+            _id: trackId,
+            "user": user._id
+        },callback);
+    }
+
     getUserForTrack(track:ITrack, callback:(ITrack) => void){
         schema.Track.findOne({_id : track._id })
             .populate("user")

@@ -12,6 +12,12 @@ var trackStorage = (function () {
         track.name = name;
         track.save(callback);
     };
+    trackStorage.prototype.safeRemoveTrack = function (trackId, user, callback) {
+        schema.Track.remove({
+            _id: trackId,
+            "user": user._id
+        }, callback);
+    };
     trackStorage.prototype.getUserForTrack = function (track, callback) {
         schema.Track.findOne({
             _id: track._id

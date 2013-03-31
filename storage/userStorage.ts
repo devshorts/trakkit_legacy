@@ -24,6 +24,7 @@ export class userStorage{
     getTracksForUser(user:IUser, callback:(IUser) => void){
         schema.Track.find({"user" : user._id}, (err, tracks) =>{
             user.tracks = tracks;
+            (<IUser>(user._doc)).tracks = tracks;
             callback(user);
         })
     }

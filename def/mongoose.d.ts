@@ -15,7 +15,7 @@ interface IEmptyCallback{
 }
 
 interface IErrorCallback{
-    (item?:string) : void;
+    (item:string) : void;
 }
 
 interface IWhere{
@@ -52,6 +52,7 @@ interface IMongooseSearchable{
 
 interface IMongooseBase {
     _id:String;
+    _doc:any;
     save(item: IEmptyCallback) : void;
     push(item:IMongooseBase):void;
     toObject():Object;

@@ -69,4 +69,10 @@ a {
 
 .tracks{
     clear:both;
+    padding-left:20px;
+}
+
+.delete{
+    margin-left:15px;
+    color:red;
 }

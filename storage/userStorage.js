@@ -22,6 +22,7 @@ var userStorage = (function () {
             "user": user._id
         }, function (err, tracks) {
             user.tracks = tracks;
+            ((user._doc)).tracks = tracks;
             callback(user);
         });
     };

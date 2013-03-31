@@ -11,14 +11,10 @@
 
 export interface IIndexScope extends ng.IScope{
     user:IUser;
-}
-
-export interface ITrackScope extends ng.IScope{
     addTrack:Function;
+    removeTrack:Function;
     form:any;
 }
-
-declare var $location:ng.ILocationService;
 
 module Controllers{
     export class IndexController{
@@ -26,14 +22,16 @@ module Controllers{
             $http.get("user/current").success(user => {
                 $scope.user = user
             });
-        }
-    }
 
-    export class TrackController{
-        constructor($scope:ITrackScope, $http:ng.IHttpService){
             $scope.addTrack = () => {
-                $http.post('/tracks/add', $scope.form).success(data => {
-                    $location.path('/');
+                $http.post('/track/add', $scope.form).success(user => {
+                    $scope.user = user;
+                })
+            }
+
+            $scope.removeTrack = id => {
+                $http.delete('/track/' + id, $scope.form).success(user => {
+                    $scope.user = user;
                 })
             }
         }
