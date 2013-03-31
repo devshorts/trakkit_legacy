@@ -31,7 +31,7 @@ export class userRoutes {
         });
 
         app.get("/user/current", requestUtils.ensureAuthenticated, (req, res) => {
-            res.send(req.user);
+            db.userStorage.getTracksForUser(req.user, user => res.send(user.toObject()));
         });
 
         app.get("/usersUnsecure", (req, res) => {

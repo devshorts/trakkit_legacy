@@ -6,6 +6,12 @@ var trackStorage = (function () {
     trackStorage.prototype.pointFields = function (point) {
         return storage.extractMongoFields(point.toObject(), "dataPoints");
     };
+    trackStorage.prototype.addTrack = function (user, name, callback) {
+        var track = storage.newTrack();
+        track.user = user._id;
+        track.name = name;
+        track.save(callback);
+    };
     trackStorage.prototype.getUserForTrack = function (track, callback) {
         schema.Track.findOne({
             _id: track._id

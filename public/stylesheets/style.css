@@ -9,7 +9,10 @@ a {
     color: #00B7FF;
 }
 
-
+.title h1{
+    margin-bottom:0px;
+    margin-top:0px;
+}
 .google{
     background: url("../images/google-16.png") no-repeat 20px 50%;
 }
@@ -36,6 +39,7 @@ a {
 
 .user{
     float:right;
+    height:48px;
 }
 
 .user-name{
@@ -47,12 +51,22 @@ a {
 
 .title{
     float:left;
+    line-height:48px;
 }
 
 .user-photo{
     float:right;
 }
 
+.header{
+    margin-bottom:50px;
+    height:48px;
+}
 .footer{
+    clear:both;
+    margin-top:200px;
+}
+
+.tracks{
     clear:both;
 }

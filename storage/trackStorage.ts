@@ -19,6 +19,16 @@ export class trackStorage{
         return storage.extractMongoFields(point.toObject(), "dataPoints");
     }
 
+    addTrack(user:IUser, name:string, callback:() => void){
+        var track = storage.newTrack();
+
+        track.user = user._id;
+
+        track.name = name;
+
+        track.save(callback);
+    }
+
     getUserForTrack(track:ITrack, callback:(ITrack) => void){
         schema.Track.findOne({_id : track._id })
             .populate("user")

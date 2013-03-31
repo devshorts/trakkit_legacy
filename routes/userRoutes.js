@@ -16,7 +16,9 @@ var userRoutes = (function () {
             });
         });
         app.get("/user/current", requestUtils.ensureAuthenticated, function (req, res) {
-            res.send(req.user);
+            db.userStorage.getTracksForUser(req.user, function (user) {
+                return res.send(user.toObject());
+            });
         });
         app.get("/usersUnsecure", function (req, res) {
             res.send("unsecure");

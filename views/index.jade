@@ -1,10 +1,11 @@
 extends layout
 
 block content
-    div(ng-controller="Controllers.IndexController")
+    div(class="header", ng-controller="Controllers.IndexController")
         .title
             h1= title
         include user
 
+    include tracks
 
     include footer

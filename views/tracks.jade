@@ -1,1 +1,5 @@
-.tracks
+div(class="tracks", ng-controller="Controllers.TrackController")
+    label(for='title') Title:
+    input(ng-model='form.title', name='title')
+
+    button(ng-click='addTrack()') Add Track
