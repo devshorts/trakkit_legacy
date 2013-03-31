@@ -19,21 +19,26 @@ export interface IIndexScope extends ng.IScope{
 module Controllers{
     export class IndexController{
         constructor($scope:IIndexScope, $http:ng.IHttpService){
-            $http.get("user/current").success(user => {
-                $scope.user = user
-            });
+            $http.get("user/current").success(user => this.setUser($scope, user));
 
             $scope.addTrack = () => {
-                $http.post('/track/add', $scope.form).success(user => {
-                    $scope.user = user;
-                })
+                $http.post('/track/add', $scope.form).success(user => this.setUser($scope, user));
             }
 
             $scope.removeTrack = id => {
-                $http.delete('/track/' + id, $scope.form).success(user => {
-                    $scope.user = user;
-                })
+                $http.delete('/track/' + id, $scope.form).success(user => this.setUser($scope, user));
             }
+        }
+
+        setUser($scope:IIndexScope, user:IUser){
+            $scope.user = this.processUser(user);
+        }
+
+        processUser(user:IUser):IUser{
+            if(user.photoUrl == null){
+                user.photoUrl = "/images/noIcon.jpg";
+            }
+            return user;
         }
     }
 }

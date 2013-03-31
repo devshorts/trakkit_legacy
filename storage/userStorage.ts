@@ -47,6 +47,10 @@ export class userStorage{
 
         schema.User.findOne(searchable, (err, user) => {
             if(user != null){
+                if(user.photoUrl == null){
+                    user.photoUrl = "/images/noIcon.jpg";
+                }
+
                 callback(user);
             }
             else{
@@ -65,6 +69,10 @@ export class userStorage{
 
         if(!util.collection.isNullOrEmpty(properties.photos)){
             newUser.photoUrl = properties.photos[0].value;
+        }
+
+        if(newUser.photoUrl == null){
+            newUser.photoUrl = "/images/noIcon.jpg";
         }
 
         newUser.name = name;

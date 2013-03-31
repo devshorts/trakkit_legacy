@@ -42,6 +42,9 @@ var userStorage = (function () {
         searchable[findId] = properties.id;
         schema.User.findOne(searchable, function (err, user) {
             if(user != null) {
+                if(user.photoUrl == null) {
+                    user.photoUrl = "/images/noIcon.jpg";
+                }
                 callback(user);
             } else {
                 _this.createOAuthUser(properties, findId, callback);
@@ -56,6 +59,9 @@ var userStorage = (function () {
         }
         if(!util.collection.isNullOrEmpty(properties.photos)) {
             newUser.photoUrl = properties.photos[0].value;
+        }
+        if(newUser.photoUrl == null) {
+            newUser.photoUrl = "/images/noIcon.jpg";
         }
         newUser.name = name;
         newUser[findId] = properties.id;
