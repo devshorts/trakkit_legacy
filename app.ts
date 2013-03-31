@@ -74,6 +74,8 @@ class AppEntry{
             });
 
         routes(app);
+
+
     }
 
     startServer(){

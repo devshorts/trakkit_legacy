@@ -1,10 +1,12 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    width:600px;
+    margin:auto;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
 }
 
 
@@ -30,4 +32,27 @@ a {
     margin: 0;
     padding: 15px 30px 15px 40px;
     list-style: none;
+}
+
+.user{
+    float:right;
+}
+
+.user-name{
+    float:left;
+    line-height:48px;
+    font-size:24px;
+    padding-right:10px;
+}
+
+.title{
+    float:left;
+}
+
+.user-photo{
+    float:right;
+}
+
+.footer{
+    clear:both;
 }

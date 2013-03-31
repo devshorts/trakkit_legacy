@@ -12,6 +12,8 @@ import routeBase = module("requestBase")
 
 export class twitterRoutes extends routeBase.requestBase{
     constructor(app:ExpressApplication) {
+        super();
+
         app.get("/twitter/success", (req, res) => {
             res.send(req.user.name);
         });

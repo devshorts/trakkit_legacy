@@ -1,5 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    div(ng-controller="Controllers.IndexController")
+        .title
+            h1= title
+        include user
+
+
+    include footer
