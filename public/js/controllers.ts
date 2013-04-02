@@ -8,6 +8,7 @@
 
 /// <reference path="../../d.ts/DefinitelyTyped/angularjs/angular.d.ts" />
 /// <reference path="../../def/all.d.ts"/>
+/// <reference path="services.ts" />
 
 export interface IIndexScope extends ng.IScope{
     user:IUser;
@@ -18,15 +19,17 @@ export interface IIndexScope extends ng.IScope{
 
 module Controllers{
     export class IndexController{
-        constructor($scope:IIndexScope, $http:ng.IHttpService){
-            $http.get("user/current").success(user => this.setUser($scope, user));
+        constructor($scope:IIndexScope, $http:ng.IHttpService, userService:IUserService, trackService:ITrackService){
+            var updateScope = (user:IUser) => this.setUser($scope, user);
+
+            userService.currentUser(updateScope);
 
             $scope.addTrack = () => {
-                $http.post('/track/add', $scope.form).success(user => this.setUser($scope, user));
+                trackService.addTrack($scope.form, updateScope)
             }
 
             $scope.removeTrack = id => {
-                $http.delete('/track/' + id, $scope.form).success(user => this.setUser($scope, user));
+                trackService.removeTrack(id, updateScope)
             }
         }
 

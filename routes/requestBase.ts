@@ -7,6 +7,8 @@
  */
 
 
+    /// <reference path="../def/all.d.ts" />
+
 export class requestBase{
 
     // Simple route middleware to ensure user is authenticated.

@@ -1,20 +1,17 @@
 var Controllers;
 (function (Controllers) {
     var IndexController = (function () {
-        function IndexController($scope, $http) {
+        function IndexController($scope, $http, userService, trackService) {
             var _this = this;
-            $http.get("user/current").success(function (user) {
+            var updateScope = function (user) {
                 return _this.setUser($scope, user);
-            });
+            };
+            userService.currentUser(updateScope);
             $scope.addTrack = function () {
-                $http.post('/track/add', $scope.form).success(function (user) {
-                    return _this.setUser($scope, user);
-                });
+                trackService.addTrack($scope.form, updateScope);
             };
             $scope.removeTrack = function (id) {
-                $http.delete('/track/' + id, $scope.form).success(function (user) {
-                    return _this.setUser($scope, user);
-                });
+                trackService.removeTrack(id, updateScope);
             };
         }
         IndexController.prototype.setUser = function ($scope, user) {
