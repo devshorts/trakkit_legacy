@@ -57,4 +57,5 @@ interface IMongooseBase {
     push(item:IMongooseBase):void;
     toObject():Object;
     remove(callBack:ICallback) : void;
+    equals(other:any):bool;
 }

@@ -4,6 +4,29 @@ var trackRoutes = (function () {
     function trackRoutes(app) {
         var _this = this;
         var requestUtils = new base.requestBase();
+        app.get("/track/:id", requestUtils.ensureAuthenticated, function (req, res) {
+            db.trackStorage.getTrack(req.params.id, function (track) {
+                if(track.user.equals(req.user._id)) {
+                    res.send(track.toObject());
+                } else {
+                    res.json(false);
+                }
+            });
+        });
+        app.post("/dataPoint/update", requestUtils.ensureAuthenticated, function (req, res) {
+            var body = (req.body);
+            var trackId = body.trackId;
+            var dataPoint = (body.dp);
+            var mappedDp = db.storage.newDataPoint();
+            mappedDp.xAxis = dataPoint.xAxis;
+            mappedDp.yAxis = dataPoint.yAxis;
+            if(dataPoint._id != null) {
+                mappedDp._id = db.storage.newObjectId(dataPoint._id);
+            }
+            db.trackStorage.updateDataPoint(trackId, dataPoint, function (track) {
+                return res.send(track.toObject());
+            });
+        });
         app.post("/track/add", requestUtils.ensureAuthenticated, function (req, res) {
             var trackName = (req.body).title;
             db.trackStorage.addTrack(req.user, trackName, function () {

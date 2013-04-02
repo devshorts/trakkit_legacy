@@ -44,7 +44,7 @@ export class trackStorage{
             });
     }
 
-    updateDataPoint(track:ITrack, point:IDataPoint, callback:(err:String) => void){
+    updateDataPointImpl(track:ITrack, point:IDataPoint, callback:(err:String) => void){
         schema.Track.update(
             {
                 "_id": track._id,
@@ -68,5 +68,44 @@ export class trackStorage{
             {multi: true, upsert: false},
             (err, item) => callback(err));
 
+    }
+
+    getTrack(trackId:string, callback:(ITrack) => void){
+        schema.Track.findOne({_id : trackId}, (err, track) => {
+            if(err){
+                log.debug(err);
+            }
+            callback(track);
+        });
+    }
+
+//    insertDataPoint(trackId:string, point:IDataPoint, callback:(ITrack) => void){
+//        schema.Track.update(
+//            { _id: trackId },
+//            {
+//                $push: { dataPoints : point }
+//            },
+//            {},
+//            (err, numUpdate, response) => {
+//                if(err){
+//                    log.debug(err);
+//                }
+//                this.getTrack(trackId, callback);
+//            }
+//        )
+//    }
+
+    updateDataPoint(trackId:string, point:IDataPoint, callback:(ITrack) => void){
+        if(point._id == null){
+            this.getTrack(trackId, track => {
+                track.dataPoints.push(point);
+                track.save(() => callback(track));
+            })
+        }
+        else{
+            var track = storage.newTrack();
+            track._id = storage.newObjectId(trackId);
+            this.updateDataPointImpl(track, point, (err) => this.getTrack(trackId, callback));
+        }
     }
 }

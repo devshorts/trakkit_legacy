@@ -19,6 +19,10 @@ export class indexRoutes{
         var utils =  new routeBase.requestBase();
 
         app.get("/", utils.ensureAuthenticated, (req, res) => {
+            res.redirect("/home");
+        });
+
+        app.get("/home", utils.ensureAuthenticated, (req, res) => {
             res.render("index", { title: "Trakkit Home"});
         });
 

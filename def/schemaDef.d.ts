@@ -8,6 +8,7 @@
 
 ///<reference path="./mongoose.d.ts"/>
 
+
 interface IDataPoint extends IMongooseBase{
     xAxis: string;
     yAxis: string;
@@ -28,4 +29,3 @@ interface IUser extends IMongooseBase{
     twitterId: String;
     tracks: ITrack[];
 }
-

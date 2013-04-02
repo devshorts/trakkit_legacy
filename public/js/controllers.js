@@ -26,5 +26,22 @@ var Controllers;
         return IndexController;
     })();
     Controllers.IndexController = IndexController;    
+    var TrackController = (function () {
+        function TrackController($scope, $http, userService, trackService, $routeParams) {
+            var updateScope = function (track) {
+                return $scope.track = track;
+            };
+            trackService.getTrack($routeParams.id, updateScope);
+            $scope.addPoint = function () {
+                var dp = {
+                    xAxis: $scope.form.xAxis,
+                    yAxis: $scope.form.yAxis
+                };
+                trackService.addDataPoint($scope.track._id.toString(), dp, updateScope);
+            };
+        }
+        return TrackController;
+    })();
+    Controllers.TrackController = TrackController;    
 })(Controllers || (Controllers = {}));
 //@ sourceMappingURL=controllers.js.map

@@ -17,6 +17,34 @@ export class trackRoutes {
     constructor(app:ExpressApplication) {
         var requestUtils = new base.requestBase();
 
+        app.get("/track/:id", requestUtils.ensureAuthenticated, (req, res) =>{
+            db.trackStorage.getTrack(req.params.id, track => {
+                if(track.user.equals(req.user._id)){
+                    res.send(<any>track.toObject());
+                }
+                else{
+                    res.json(false);
+                }
+            });
+        });
+
+        app.post("/dataPoint/update", requestUtils.ensureAuthenticated, (req, res) =>{
+            var body:any = <any>(req.body);
+
+            var trackId = body.trackId;
+
+            var dataPoint:IDataPoint = <IDataPoint>(body.dp);
+
+            var mappedDp = db.storage.newDataPoint();
+            mappedDp.xAxis = dataPoint.xAxis;
+            mappedDp.yAxis = dataPoint.yAxis;
+            if(dataPoint._id != null){
+                mappedDp._id = db.storage.newObjectId(dataPoint._id);
+            }
+
+            db.trackStorage.updateDataPoint(trackId, dataPoint, track => res.send(track.toObject()));
+        })
+
         app.post("/track/add", requestUtils.ensureAuthenticated, (req, res) =>{
             var trackName:string = <any>(req.body).title;
 

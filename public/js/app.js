@@ -10,12 +10,19 @@ angular.module(NG.App, [
     '$routeProvider', 
     '$locationProvider', 
     function ($routeProvider, $locationProvider) {
-        $routeProvider.when('/', {
-            templateUrl: 'partials/tracks',
+        $routeProvider.when('/home', {
+            templateUrl: '/partials/tracks',
             controller: "Controllers.IndexController"
         });
+        $routeProvider.when('/track/:id', {
+            templateUrl: '/partials/viewTrack',
+            controller: "Controllers.TrackController"
+        });
+        $routeProvider.when('/logout', {
+            templateUrl: '/login'
+        });
         $routeProvider.otherwise({
-            redirectTo: '/login.html'
+            redirectTo: '/login'
         });
         $locationProvider.html5Mode(true);
     }]);
