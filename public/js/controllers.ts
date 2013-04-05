@@ -28,35 +28,35 @@ export interface ITrackRouteParams{
 }
 
 module Controllers{
-    export class IndexController{
-        constructor($scope:IIndexScope, $http:ng.IHttpService, userService:IUserService, trackService:ITrackService){
+    export class IndexController {
+        constructor($scope:IIndexScope, $http:ng.IHttpService, userService:IUserService, trackService:ITrackService) {
             var updateScope = (user:IUser) => this.setUser($scope, user);
 
             userService.currentUser(updateScope);
 
             $scope.addTrack = () => {
                 trackService.addTrack($scope.form, updateScope)
-            }
+            };
 
             $scope.removeTrack = id => {
                 trackService.removeTrack(id, updateScope)
             }
         }
 
-        setUser($scope:IIndexScope, user:IUser){
+        setUser($scope:IIndexScope, user:IUser) {
             $scope.user = this.processUser(user);
         }
 
-        processUser(user:IUser):IUser{
-            if(user.photoUrl == null){
+        processUser(user:IUser):IUser {
+            if (user.photoUrl == null) {
                 user.photoUrl = "/images/noIcon.jpg";
             }
             return user;
         }
     }
 
-    export class TrackController{
-        constructor($scope:ITrackScope, $http:ng.IHttpService, userService:IUserService, trackService:ITrackService, $routeParams:ITrackRouteParams){
+    export class TrackController {
+        constructor($scope:ITrackScope, $http:ng.IHttpService, userService:IUserService, trackService:ITrackService, $routeParams:ITrackRouteParams) {
             var updateScope = (track:ITrack) => $scope.track = track;
 
             trackService.getTrack($routeParams.id, updateScope);
@@ -65,7 +65,7 @@ module Controllers{
                 var dp:IDataPoint = <IDataPoint>{
                     xAxis: $scope.form.xAxis,
                     yAxis: $scope.form.yAxis
-                }
+                };
                 trackService.addDataPoint($scope.track._id.toString(), dp, updateScope)
             }
         }

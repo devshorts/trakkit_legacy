@@ -1,0 +1,124 @@
+@import url(http://fonts.googleapis.com/css?family=Orbitron:400,500,900);
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, sans-serif;
+  font-size: 14px;
+  background-color: #f8f8f8;
+  color: #707774; }
+
+input {
+  border-radius: 5px;
+  padding: 8px;
+  border: 1px solid #b4b4b4;
+  color: #4d4d4d; }
+
+a {
+  text-decoration: none;
+  color: #707774; }
+
+.google {
+  background: url("../images/google-16.png") no-repeat 20px 50%; }
+
+.twitter {
+  background: url("../images/twitter-16.gif") no-repeat 20px 50%; }
+
+.authUl {
+  position: relative;
+  margin: 0 10px 10px;
+  padding: 0;
+  list-style: none;
+  z-index: 2;
+  list-style: none; }
+
+.auth-item {
+  float: left;
+  margin: 0;
+  padding: 15px 30px 15px 40px;
+  list-style: none; }
+
+.main-header {
+  background-color: #EDEEEE;
+  height: 40px;
+  color: #31A68A;
+  border-bottom: 1px solid #dfe0e0;
+  position: relative; }
+  .main-header .title {
+    line-height: 40px;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 40px;
+    font-family: 'Orbitron', sans-serif; }
+  .main-header .user {
+    position: absolute;
+    width: 150px;
+    right: 40px;
+    top: 0;
+    line-height: 40px;
+    padding-left: 30px;
+    font-weight: bold; }
+    .main-header .user .user-photo {
+      position: absolute;
+      left: 0;
+      top: 5px; }
+
+.main-body {
+  padding: 20px; }
+
+.tracks-header {
+  font-size: 20px;
+  position: relative;
+  height: 40px; }
+  .tracks-header .title {
+    padding-left: 20px;
+    line-height: 40px;
+    color: #2b927a;
+    font-size: 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500; }
+  .tracks-header .details {
+    position: absolute;
+    left: 175px;
+    top: 5px;
+    border-left: 1px solid #31A68A;
+    padding-left: 20px;
+    height: 30px; }
+    .tracks-header .details input {
+      border-radius: 0;
+      padding: 0;
+      border: 1px solid #b4b4b4;
+      color: #4d4d4d;
+      height: 28px;
+      margin: 0 20px;
+      padding: 0 5px; }
+    .tracks-header .details label {
+      font-size: 12px;
+      line-height: 30px; }
+    .tracks-header .details .button {
+      background-color: #31A68A;
+      color: white;
+      font-weight: 500;
+      text-transform: uppercase;
+      display: inline;
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer; }
+      .tracks-header .details .button:hover {
+        background-color: #257f69; }
+      .tracks-header .details .button.back {
+        margin-left: 10px; }
+
+.tracks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .tracks-list li {
+    padding: 15px 20px;
+    background: #edf1f0;
+    margin-bottom: 1px;
+    font-weight: bold;
+    border-bottom: 1px solid #cae2da; }
+
+.delete {
+  margin-left: 15px;
+  color: red; }

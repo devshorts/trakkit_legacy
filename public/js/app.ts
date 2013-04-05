@@ -16,7 +16,7 @@ var NG = {
     Filters: "trakkit.filters",
     Services: "trakkit.services",
     Directives: "trakkit.directives"
-}
+};
 
 // Declare app level module which depends on filters, and services
 angular.module(NG.App, [NG.Services]).

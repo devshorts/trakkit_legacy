@@ -1,0 +1,70 @@
+.tracks-header {
+  font-size: 20px;
+  position: relative;
+  height: 40px;
+  .title {
+    padding-left: 20px;
+    line-height: 40px;
+    color: darken(#31A68A, 5%);
+    font-size: 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+  }
+  .details {
+    position: absolute;
+    left: 175px;
+    top: 5px;
+    border-left: 1px solid #31A68A;
+    padding-left: 20px;
+    height: 30px;
+    input {
+      border-radius: 0;
+      padding: 0;
+      border: 1px solid #b4b4b4;
+      color: #4d4d4d;
+      height: 28px;
+      margin: 0 20px;
+      padding: 0 5px;
+    }
+    label {
+      font-size: 12px;
+      line-height: 30px;
+    }
+    .button {
+      background-color: #31A68A;
+      color: white;
+      font-weight: 500;
+      text-transform: uppercase;
+      display: inline;
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      &:hover {
+        background-color: darken(#31A68A, 10%);
+      }
+      &.back{
+        margin-left: 10px ;
+      }
+    }
+
+  }
+}
+
+.tracks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    padding: 15px 20px;
+    background: rgb(237, 241, 240);
+    margin-bottom: 1px;
+    font-weight: bold;
+    border-bottom: 1px solid rgb(202, 226, 218);
+  }
+}
+
+.delete {
+  margin-left: 15px;
+  color: red;
+}

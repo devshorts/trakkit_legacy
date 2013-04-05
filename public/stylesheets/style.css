@@ -13,13 +13,7 @@ a {
     margin-bottom:0px;
     margin-top:0px;
 }
-.google{
-    background: url("../images/google-16.png") no-repeat 20px 50%;
-}
 
-.twitter{
-    background: url("../images/twitter-16.gif") no-repeat 20px 50%;
-}
 
 .authUl{
     position: relative;

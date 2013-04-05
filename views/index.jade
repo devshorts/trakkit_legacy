@@ -1,11 +1,11 @@
 extends layout
 
 block content
-    div(class="header", ng-controller="Controllers.IndexController")
+    div(class="main-header", ng-controller="Controllers.IndexController")
         .title
-            h1= title
+            =title
         include user
 
-    div(ng-view)
+    div(ng-view,class="main-body")
 
     include footer

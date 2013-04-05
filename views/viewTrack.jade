@@ -1,14 +1,19 @@
 div(class="dataPoints", ng-controller="Controllers.TrackController")
-    h2 Your dataPoints
-    ul
+    header(class="tracks-header")
+        section(class="title") DATA-POINTS
+        section(class="details")
+            label(for='xAxis') X-AXIS:
+            input(ng-model='form.xAxis', name='xAxis')
+            label(for='yAxis') Y-AXIS:
+            input(ng-model='form.yAxis', name='yAxis')
+            section(class="button",ng-click='addPoint()') Add Point
+            a(href="/home")
+                section(class="button back") back
+
+    ul(class="tracks-list")
         li(ng-repeat="dataPoint in track.dataPoints")
             {{dataPoint.xAxis}}
             {{dataPoint.yAxis}}
 
-    label(for='xAxis') xAxis:
-    input(ng-model='form.xAxis', name='xAxis')
-    label(for='yAxis') yAxis:
-    input(ng-model='form.yAxis', name='yAxis')
-    button(ng-click='addPoint()') Add Track
 
-    a(href="/home") back
+

@@ -7,7 +7,7 @@ var indexRoutes = (function () {
         });
         app.get("/home", utils.ensureAuthenticated, function (req, res) {
             res.render("index", {
-                title: "Trakkit Home"
+                title: "TRAKKIT"
             });
         });
         app.get("/login", function (req, res) {

@@ -1,10 +1,13 @@
 div(class="tracks", ng-controller="Controllers.IndexController")
-    h2 Your tracks
-    ul
+    header(class="tracks-header")
+        section(class="title") TRACKS
+        section(class="details")
+            label(for='title') Track Name
+            input(ng-model='form.title', name='title')
+            section(class="button",ng-click='addTrack()') Add Track
+    ul(class="tracks-list")
+
         li(ng-repeat="track in user.tracks")
             a(href="/track/{{track._id}}") {{track.name}}
             a(class="delete", href="", ng-click='removeTrack(track._id)') x
 
-    label(for='title') Track Name:
-    input(ng-model='form.title', name='title')
-    button(ng-click='addTrack()') Add Track
