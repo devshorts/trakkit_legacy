@@ -23,11 +23,19 @@ export class indexRoutes{
         });
 
         app.get("/home", utils.ensureAuthenticated, (req, res) => {
-            res.render("index", { title: "TRAKKIT"});
+            this.renderIndex(res);
         });
 
         app.get("/login", (req, res) => {
             res.render("login", { title: "Trakkit Login"});
         });
+
+        app.get("*", (req, res) =>{
+            this.renderIndex(res);
+        });
+    }
+
+    renderIndex(res){
+        res.render("index", { title: "TRAKKIT"});
     }
 }

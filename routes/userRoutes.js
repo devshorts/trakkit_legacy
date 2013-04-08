@@ -7,23 +7,23 @@ var userRoutes = (function () {
             req.logout();
             res.redirect('/');
         });
-        app.get("/users", requestUtils.ensureAuthenticated, function (req, res) {
+        app.get("/api/users", requestUtils.ensureAuthenticated, function (req, res) {
             res.send(req.user.name);
         });
-        app.get("/users/:id", requestUtils.ensureAuthenticated, function (req, res) {
+        app.get("/api/users/:id", requestUtils.ensureAuthenticated, function (req, res) {
             db.userStorage.getUser(req.params.id, function (err, foundUser) {
                 return res.send(foundUser.toObject());
             });
         });
-        app.get("/user/current", requestUtils.ensureAuthenticated, function (req, res) {
+        app.get("/api/user/current", requestUtils.ensureAuthenticated, function (req, res) {
             db.userStorage.getTracksForUser(req.user, function (user) {
                 return res.send(user.toObject());
             });
         });
-        app.get("/usersUnsecure", function (req, res) {
+        app.get("/api/usersUnsecure", function (req, res) {
             res.send("unsecure");
         });
-        app.get("/user/:name/images", requestUtils.ensureAuthenticated, function (req, res) {
+        app.get("/api/user/:name/images", requestUtils.ensureAuthenticated, function (req, res) {
             db.userStorage.getUserByUsername(req.params.name, function (err, foundUser) {
                 res.render("user.jade", {
                     user: foundUser.toObject()

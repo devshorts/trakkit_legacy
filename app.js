@@ -1,6 +1,7 @@
 var db = require("./storage/storageContainer")
 var auth = require("./auth/oauthDefinitions")
 
+var indexRoutes = require("./routes/indexRoutes")
 var fs = require('fs');
 var express = require('express'), routes = require('./routes'), http = require('http'), path = require('path'), log = require("./utils/log.js"), passport = require('passport');
 var app = express();
@@ -28,8 +29,8 @@ var AppEntry = (function () {
             app.use(express.session());
             app.use(passport.initialize());
             app.use(passport.session());
-            app.use(app.router);
             app.use(express.static(path.join(__dirname, 'public')));
+            app.use(app.router);
         });
         app.configure('development', function () {
             app.use(express.errorHandler());
@@ -43,12 +44,13 @@ var AppEntry = (function () {
             app.use(express.session());
             app.use(passport.initialize());
             app.use(passport.session());
-            app.use(app.router);
             app.use(staticMiddleware);
+            app.use(app.router);
         });
         routes(app);
     };
     AppEntry.prototype.startServer = function () {
+        new indexRoutes.indexRoutes(app);
         app.listen(3000);
         console.log('Listening on port 3000');
     };

@@ -17,7 +17,7 @@ export class trackRoutes {
     constructor(app:ExpressApplication) {
         var requestUtils = new base.requestBase();
 
-        app.get("/track/:id", requestUtils.ensureAuthenticated, (req, res) =>{
+        app.get("/api/track/:id", requestUtils.ensureAuthenticated, (req, res) =>{
             db.trackStorage.getTrack(req.params.id, track => {
                 if(track.user.equals(req.user._id)){
                     res.send(<any>track.toObject());
@@ -28,7 +28,7 @@ export class trackRoutes {
             });
         });
 
-        app.post("/dataPoint/update", requestUtils.ensureAuthenticated, (req, res) =>{
+        app.post("/api/dataPoint/update", requestUtils.ensureAuthenticated, (req, res) =>{
             var body:any = <any>(req.body);
 
             var trackId = body.trackId;
@@ -45,13 +45,13 @@ export class trackRoutes {
             db.trackStorage.updateDataPoint(trackId, dataPoint, track => res.send(track.toObject()));
         })
 
-        app.post("/track/add", requestUtils.ensureAuthenticated, (req, res) =>{
+        app.post("/api/track/add", requestUtils.ensureAuthenticated, (req, res) =>{
             var trackName:string = <any>(req.body).title;
 
             db.trackStorage.addTrack(req.user, trackName, () => this.queryFullUser(req, res));
         })
 
-        app.del("/track/:id", requestUtils.ensureAuthenticated, (req, res) =>{
+        app.del("/api/track/:id", requestUtils.ensureAuthenticated, (req, res) =>{
             db.trackStorage.safeRemoveTrack(req.params.id, req.user, (err) => {
                 if(!err){
                     this.queryFullUser(req, res);

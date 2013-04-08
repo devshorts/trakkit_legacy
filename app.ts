@@ -14,6 +14,7 @@
 import db = module("./storage/storageContainer");
 import auth = module("./auth/oauthDefinitions");
 import requestBase = module("./routes/requestBase");
+import indexRoutes = module("./routes/indexRoutes")
 
 var fs = require('fs');
 
@@ -54,8 +55,9 @@ class AppEntry{
             app.use(express.session());
             app.use(passport.initialize());
             app.use(passport.session());
+            app.use(express.static(path.join(__dirname, 'public')));
             app.use(app.router);
-            app.use(express.static(path.join(__dirname, 'public')))});
+        });
 
         app.configure('development', () => {
             app.use(express.errorHandler());
@@ -69,16 +71,17 @@ class AppEntry{
             app.use(express.session());
             app.use(passport.initialize());
             app.use(passport.session());
-            app.use(app.router);
             app.use(staticMiddleware);
+            app.use(app.router);
             });
 
         routes(app);
-
-
     }
 
     startServer(){
+        // define catch all routes, must be last
+        new indexRoutes.indexRoutes(app);
+
         app.listen(3000);
         console.log('Listening on port 3000');
     }

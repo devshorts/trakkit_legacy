@@ -30,7 +30,7 @@ angular.module(NG.Services, [])
        .factory("userService", ($http:ng.IHttpService):IUserService => {
             return {
                 currentUser: (callback:(IUser) => void) => {
-                    $http.get("user/current").success(callback);
+                    $http.get("/api/user/current").success(callback);
                 }
             }
         })
@@ -38,19 +38,17 @@ angular.module(NG.Services, [])
             return {
 
                 getTrack:(trackId:string, callback:(ITrack) => void) => {
-                    $http.get('/track/' + trackId).success(callback);
+                    $http.get('/api/track/' + trackId).success(callback);
                 },
 
                 addTrack:(data:any, callback:(IUser) => void) => {
-                    $http.post('/track/add', data).success(callback);
+                    $http.post('/api/track/add', data).success(callback);
                 },
                 removeTrack: (id:string, callback:(IUser) => void) => {
-                    var u:IUser;
-                    u.facebookId = "abc";
-                    $http.delete('/track/' + id).success(callback);
+                    $http.delete('/api/track/' + id).success(callback);
                 },
                 addDataPoint: (trackId:string, dataPoint:IDataPoint, callback:(ITrack) => void) => {
-                    $http.post("/dataPoint/update", {"trackId":trackId, dp:dataPoint}).success(callback);
+                    $http.post("/api/dataPoint/update", {"trackId":trackId, dp:dataPoint}).success(callback);
                 }
             }
         });

@@ -22,23 +22,23 @@ export class userRoutes {
             res.redirect('/');
         });
 
-        app.get("/users", requestUtils.ensureAuthenticated, (req, res) => {
+        app.get("/api/users", requestUtils.ensureAuthenticated, (req, res) => {
             res.send(req.user.name);
         });
 
-        app.get("/users/:id", requestUtils.ensureAuthenticated, (req, res) => {
+        app.get("/api/users/:id", requestUtils.ensureAuthenticated, (req, res) => {
             db.userStorage.getUser(req.params.id, (err, foundUser) => res.send(foundUser.toObject()));
         });
 
-        app.get("/user/current", requestUtils.ensureAuthenticated, (req, res) => {
+        app.get("/api/user/current", requestUtils.ensureAuthenticated, (req, res) => {
             db.userStorage.getTracksForUser(req.user, user => res.send(user.toObject()));
         });
 
-        app.get("/usersUnsecure", (req, res) => {
+        app.get("/api/usersUnsecure", (req, res) => {
             res.send("unsecure");
         });
 
-        app.get("/user/:name/images", requestUtils.ensureAuthenticated, (req, res) => {
+        app.get("/api/user/:name/images", requestUtils.ensureAuthenticated, (req, res) => {
             db.userStorage.getUserByUsername(req.params.name, (err, foundUser) => {
                 res.render("user.jade", {user: foundUser.toObject()})
             });
